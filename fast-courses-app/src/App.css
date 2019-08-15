@@ -128,6 +128,10 @@ em {
   cursor: pointer;
 }
 
+.hit__schedule__entry:hover {
+  background-color: rgba(193, 180, 247, 0.15);
+}
+
 .hit__star {
   color: #7b60ed;
   transition: 0.1s all ease-in-out;

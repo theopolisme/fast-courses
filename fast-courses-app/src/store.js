@@ -64,7 +64,6 @@ export const useStore = () => {
       setAppData({ ...appData, classes: appData.classes.filter(c => c !== id) })
     },
     getClassesForTerm: termId => {
-      console.log('get classes', appData.classes, cache);
       return appData.classes.map(c => cache[c]).filter(c => c && c.termId === termId);
     }
   };
