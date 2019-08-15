@@ -1,0 +1,185 @@
+em {
+  background: cyan;
+  font-style: normal;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+  padding: 0.5rem 1rem;
+  background-image: linear-gradient(to right, #8e43e7, #00aeff);
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.header a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.header-title {
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+.header-title::after {
+  content: ' ▸ ';
+  padding: 0 0.5rem;
+}
+
+.header-subtitle {
+  font-size: 1.2rem;
+}
+
+.search-panel {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 1rem 1rem 0 1rem;
+}
+
+.search-panel__query {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  padding: 1rem 1rem 0.5rem;
+  margin: 0 -1rem;
+  box-shadow: 0 0 10px 10px rgba(255,255,255,1);
+}
+
+.search-panel__stats {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  text-align: right;
+}
+
+.pagination {
+  padding: 2rem;
+  text-align: center;
+}
+
+.search-panel__filters {
+  float: left;
+  width: 250px;
+  position: sticky;
+  top: 0;
+  padding: 1rem 0;
+  height: calc(100vh - 2rem);
+  overflow-y: scroll;
+}
+
+.search-panel__results {
+  margin: 0 290px;
+}
+
+.search-panel__right {
+  float: right;
+  width: 250px;
+  position: sticky;
+  top: 0;
+  padding: 1rem 0;
+  height: calc(100vh - 2rem);
+  overflow-y: scroll;
+}
+
+.ais-Panel {
+  margin-top: 1rem;
+}
+
+.hit {
+  box-shadow: 0 0 5px 0px rgba(140, 70, 231, 0.25);
+  padding: 1.5rem 1.5rem 1rem;
+  margin: 1rem 0;
+}
+
+.hit__header {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.hit__header__number {
+  font-weight: bold;
+}
+
+.hit__body {
+  font-size: 0.85rem;
+  color: #616161;
+}
+
+.hit__meta, .hit__schedule {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #929292;
+}
+
+.hit__schedule {
+  line-height: 1.4;
+}
+
+.hit__schedule_time {
+  font-weight: bold;
+}
+
+.hit__actions {
+  float: right;
+}
+
+.hit__schedule__entry {
+  cursor: pointer;
+}
+
+.hit__star {
+  color: #7b60ed;
+  transition: 0.1s all ease-in-out;
+  display: inline-block;
+}
+
+.hit__schedule__entry:hover .hit__star {
+  transform: scale(1.3);
+}
+
+.hit__actions a.ais-Menu-link, a.hit__instructor {
+  display: inline;
+  color: #7b60ed;
+  font-size: inherit !important;
+  text-decoration: none;
+  z-index: 1;
+}
+
+.attribution {
+  text-align: center;
+  font-size: 0.75em;
+  padding-bottom: 1rem;
+}
+
+.ais-HierarchicalMenu-link, .ais-Menu-link {
+  font-size: 0.9rem !important;
+}
+
+.search-panel__right .ais-Panel:first-child {
+  margin-top: 0;
+}
+
+.calendar {
+  color: #616161;
+}
+
+.calendar .fc {
+  font-size: 0.8rem;
+}
+
+.calendar .fc .fc-today {
+  background-color: inherit !important;
+}
+
+.calendar .fc-time-grid-event.fc-short .fc-content {
+  white-space: initial;
+}
+
+.calendar + .calendar {
+  margin-top: 1rem;
+}
+
+.fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0 !important;
+}
