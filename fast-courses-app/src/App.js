@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   InstantSearch,
   SearchBox,
@@ -20,7 +20,6 @@ import * as util from './util';
 import 'instantsearch.css/themes/algolia.css';
 import './App.css';
 
-const HEADER_SCROLL = 109;
 const DEBOUNCE_TIME = 400;
 
 const createURL = state => {
@@ -37,8 +36,8 @@ const Sticky = ({ className, children }) => {
   return <div className={`${className} sticky`}>{children}</div>;
 };
 
-const Header = () => (
-  <header className="header">
+const Header = React.forwardRef((props, ref) => (
+  <header className="header" ref={ref} {...props}>
     <h1 className="header-title">
       <a href="/">fast-courses<span>▸</span></a>
     </h1>
@@ -46,16 +45,17 @@ const Header = () => (
       a better way to search Stanford courses* <span className="mobile-note">(more features on desktop!)</span>
     </p>
   </header>
-);
+));
 
 const App = ({ location, history }) => {
   const [searchState, setSearchState] = useState(urlToSearchState(location));
   const [debouncedSetState, setDebouncedSetState] = useState(null);
+  const ref = useRef(null);
 
   const onSearchStateChange = updatedSearchState => {
-    console.log('searchState', window.scrollY, HEADER_SCROLL)
-    if (window.scrollY >= HEADER_SCROLL) {
-      window.scrollTo(0, HEADER_SCROLL);
+    const top = ref.current.getBoundingClientRect().height + 32;
+    if (window.scrollY >= top) {
+      window.scrollTo(0, top);
     }
 
     clearTimeout(debouncedSetState);
@@ -73,7 +73,7 @@ const App = ({ location, history }) => {
 
   return (
     <div>
-      <Header />
+      <Header ref={ref} />
       <InstantSearch
         searchClient={searchClient}
         indexName="courses"
