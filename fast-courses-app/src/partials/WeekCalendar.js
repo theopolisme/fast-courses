@@ -20,7 +20,7 @@ const Calendar = ({ history, events, minTime, maxTime, onClick }) => {
         contentHeight="auto"
         columnHeaderFormat={{ weekday: 'short' }}
         defaultDate="2019-01-14"
-        slotDuration="01:00:00"
+        slotDuration="00:30:00"
         slotLabelInterval={{hours: 1}}
         displayEventTime={false}
         events={events}

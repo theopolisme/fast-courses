@@ -69,12 +69,12 @@ em {
 }
 
 .search-panel__results {
-  margin: 0 290px;
+  margin: 0 320px 0 290px;
 }
 
 .search-panel__right {
   float: right;
-  width: 250px;
+  width: 280px;
   position: sticky;
   top: 0;
   padding: 1rem 0;
