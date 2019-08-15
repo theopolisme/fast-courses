@@ -74,13 +74,14 @@ const TermView = ({ term, classes, updateSearchState }) => {
   );
 }
 
-const RightPanel = ({ updateSearchState }) => {
+const RightPanel = ({ updateSearchState, ...rest }) => {
   const { getClassesForTerm } = useStore();
 
   return (
-    <div className="search-panel__right">
+    <div {...rest}>
       {CURRENT_TERMS.map(t => (
         <TermView
+          key={t.termId}
           term={t}
           classes={getClassesForTerm(t.termId)}
           updateSearchState={updateSearchState}

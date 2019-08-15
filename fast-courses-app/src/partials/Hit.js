@@ -41,7 +41,7 @@ const Hit = ({ hit, store }) => {
                     <span className="hit__schedule_time">{util.formatScheduleDayTime(schedule)}</span>
                     {' '}&middot;{' '}{schedule.location || 'no location'}{' '}&middot;{' '}
                     {!schedule.instructors || schedule.instructors.length === 0 ? 'no instructor' : ''}
-                    {util.intersperse((schedule.instructors || []).map(i => <a className="hit__instructor" onClick={e => e.stopPropagation()} href={`mailto:${i.sunet}@stanford.edu`}>{i.name}</a>), '; ')}
+                    {util.intersperse((schedule.instructors || []).map(i => <a key={i.sunet} className="hit__instructor" onClick={e => e.stopPropagation()} href={`mailto:${i.sunet}@stanford.edu`}>{i.name}</a>), '; ')}
                   </span>
                 );
               })}

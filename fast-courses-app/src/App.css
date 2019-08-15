@@ -7,7 +7,7 @@ em {
   display: flex;
   align-items: center;
   min-height: 50px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 2rem;
   background-image: linear-gradient(to right, #8e43e7, #00aeff);
   color: #fff;
   margin-bottom: 1rem;
@@ -21,11 +21,11 @@ em {
 .header-title {
   font-size: 1.2rem;
   font-weight: normal;
+  white-space: nowrap;
 }
 
-.header-title::after {
-  content: ' ▸ ';
-  padding: 0 0.5rem;
+.header-title span {
+  margin: 0 1rem;
 }
 
 .header-subtitle {
@@ -33,9 +33,24 @@ em {
 }
 
 .search-panel {
+  width: 90vw;
   max-width: 1500px;
   margin: 0 auto;
   padding: 1rem 1rem 0 1rem;
+  display: flex;
+}
+
+body.scrolled .sticky {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 2rem);
+  overflow-y: scroll;
+}
+
+.search-panel__results {
+  margin: 0 40px;
+  flex: 1;
+  min-height: 100vh;
 }
 
 .search-panel__query {
@@ -45,6 +60,7 @@ em {
   padding: 1rem 1rem 0.5rem;
   margin: 0 -1rem;
   box-shadow: 0 0 10px 10px rgba(255,255,255,1);
+  z-index: 999;
 }
 
 .search-panel__stats {
@@ -59,27 +75,13 @@ em {
 }
 
 .search-panel__filters {
-  float: left;
   width: 250px;
-  position: sticky;
-  top: 0;
   padding: 1rem 0;
-  height: calc(100vh - 2rem);
-  overflow-y: scroll;
-}
-
-.search-panel__results {
-  margin: 0 320px 0 290px;
 }
 
 .search-panel__right {
-  float: right;
   width: 280px;
-  position: sticky;
-  top: 0;
   padding: 1rem 0;
-  height: calc(100vh - 2rem);
-  overflow-y: scroll;
 }
 
 .ais-Panel {
@@ -104,6 +106,8 @@ em {
 .hit__body {
   font-size: 0.85rem;
   color: #616161;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .hit__meta, .hit__schedule {
@@ -112,8 +116,8 @@ em {
   color: #929292;
 }
 
-.hit__schedule {
-  line-height: 1.4;
+.hit__schedule__entry {
+  margin-bottom: 5px;
 }
 
 .hit__schedule_time {
@@ -156,6 +160,10 @@ em {
   padding-bottom: 1rem;
 }
 
+.attribution .ais-Menu-link {
+  display: inline;
+}
+
 .ais-HierarchicalMenu-link, .ais-Menu-link {
   font-size: 0.9rem !important;
 }
@@ -186,4 +194,47 @@ em {
 
 .fc-toolbar.fc-header-toolbar {
   margin-bottom: 0 !important;
+}
+
+.mobile-note {
+  display: none;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 980px) {
+  .mobile-note {
+    display: inline;
+  }
+
+  .search-panel {
+    flex-direction: column;
+    width: auto;
+  }
+
+  .search-panel__results {
+    margin: -1rem 20px 0;
+    min-height: auto;
+  }
+
+  .search-panel__filters, .search-panel__right {
+    width: 100%;
+  }
+
+  body.scrolled .search-panel__filters.sticky, body.scrolled .search-panel__right.sticky {
+    position: static;
+    height: auto;
+  }
+
+  .search-panel__filters {
+    order: 1;
+  }
+
+  .search-panel__right {
+    order: 2;
+  }
+
+  .hit__actions {
+    float: none;
+  }
 }
