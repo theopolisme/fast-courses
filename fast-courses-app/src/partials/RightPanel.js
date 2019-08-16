@@ -3,6 +3,9 @@ import WeekCalendar from './WeekCalendar';
 import {
   Panel,
 } from 'react-instantsearch-dom';
+import ReactTooltip from 'react-tooltip'
+
+import * as util from '../util';
 
 import ColorHash from 'color-hash';
 import { useStore } from '../store';
@@ -53,15 +56,24 @@ const TermView = ({ term, classes, updateSearchState }) => {
           start: `${date}T${start}`,
           end: `${date}T${end}`,
           color: colorHash.hex(c.number),
-          url: `?query=${c.number}`
+          url: `?query=${c.number}`,
+          extendedProps: { units: c.units }
         });
       });
     });
     return events;
   }, []);
 
+  const invisibleClasses = classes.filter(c => !c.schedules.length || c.schedules.every(s => !s.days));
+
+  const totalUnits = classes.reduce((t, c) => t + c.units, 0);
+
+  const unitsSummary = classes.length ?
+    `${classes.sort((a, b) => b.units - a.units).map(c => `${c.number}: ${c.units} units`).join('<br>')}`
+    : 'No classes yet';
+
   return (
-    <Panel header={term.term}>
+    <Panel header={<span>{term.term} <span className="term_header__units" data-tip={unitsSummary}>{totalUnits} units</span></span>}>
       <WeekCalendar
         events={events}
         minTime={minTime}
@@ -70,6 +82,22 @@ const TermView = ({ term, classes, updateSearchState }) => {
           updateSearchState({ query: event.title });
         }}
       />
+      {invisibleClasses.length ?
+        <div className="term__invisible">
+          Not yet scheduled:
+          {' '}{util.intersperse(invisibleClasses.map(c => (
+            <a
+              href={`?query=${c.number}`}
+              onClick={e => {
+                if (!e.metaKey) {
+                  e.preventDefault();
+                  updateSearchState({ query: c.number })
+                }
+              }}
+            >{c.number}</a>
+          )), ', ')}
+        </div>
+      : null}
     </Panel>
   );
 }
@@ -87,6 +115,7 @@ const RightPanel = ({ updateSearchState, ...rest }) => {
           updateSearchState={updateSearchState}
         />
       ))}
+      <ReactTooltip effect="solid" multiline={true} />
     </div>
   );
 }

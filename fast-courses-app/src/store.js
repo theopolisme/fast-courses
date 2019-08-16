@@ -19,6 +19,7 @@ const makeCacheEntry = (hit, section) => {
   return {
     number: hit.number,
     title: hit.title,
+    units: +hit.unitsMax,
     ...section
   };
 }

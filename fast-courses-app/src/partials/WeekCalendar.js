@@ -1,6 +1,7 @@
 import React from 'react'
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
+import ReactTooltip from 'react-tooltip'
 
 const Calendar = ({ history, events, minTime, maxTime, onClick }) => {
   return (
@@ -29,6 +30,12 @@ const Calendar = ({ history, events, minTime, maxTime, onClick }) => {
             info.jsEvent.preventDefault();
             onClick(info.event);
           }
+        }}
+        eventRender={({ event, el }) => {
+          el.dataset.tip = `${event.title} (${event.extendedProps.units} units)`;
+        }}
+        eventPositioned={() => {
+          ReactTooltip.rebuild();
         }}
       />
     </div>

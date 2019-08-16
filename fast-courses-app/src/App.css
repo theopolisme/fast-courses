@@ -172,6 +172,15 @@ body.scrolled .sticky {
   margin-top: 0;
 }
 
+.search-panel__right .term_header__units {
+  display: inline-block;
+  float: right;
+  opacity: 0.4;
+  margin-top: 3px;
+  font-size: 0.75em;
+  cursor: pointer;
+}
+
 .calendar {
   color: #616161;
 }
@@ -194,6 +203,17 @@ body.scrolled .sticky {
 
 .fc-toolbar.fc-header-toolbar {
   margin-bottom: 0 !important;
+}
+
+.term__invisible {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.term__invisible a {
+  color: initial;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 .mobile-note {
