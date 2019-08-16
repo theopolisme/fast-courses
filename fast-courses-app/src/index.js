@@ -1,8 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import ReactGA from 'react-ga';
+
 import './index.css';
 import App from './App';
+
+const debug = process.env.NODE_ENV === 'development';
+
+ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID, {
+  debug
+});
 
 // Header scroll
 window.addEventListener('scroll', e => {

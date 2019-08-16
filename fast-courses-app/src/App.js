@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   InstantSearch,
   SearchBox,
@@ -10,6 +10,7 @@ import {
   SortBy,
 } from 'react-instantsearch-dom';
 import qs from 'qs';
+import ReactGA from 'react-ga';
 
 import Hits from './partials/Hits';
 import RightPanel from './partials/RightPanel';
@@ -52,21 +53,34 @@ const App = ({ location, history }) => {
   const [debouncedSetState, setDebouncedSetState] = useState(null);
   const ref = useRef(null);
 
+  // Trigger an initial state change to update log
+  useEffect(() => {
+    onSearchStateChange(searchState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onSearchStateChange = updatedSearchState => {
+    // Handle scroll
     const top = ref.current.getBoundingClientRect().height + 32;
     if (window.scrollY >= top) {
       window.scrollTo(0, top);
     }
 
+    // Debounced URL update
     clearTimeout(debouncedSetState);
-
     setDebouncedSetState(
       setTimeout(() => {
         history.push(searchStateToUrl({ location }, updatedSearchState), updatedSearchState);
       }, DEBOUNCE_TIME)
     );
 
+    // Update rendered state
     setSearchState(updatedSearchState);
+
+    // Analytics
+    const page = `/?query=${updatedSearchState.query}`;
+    ReactGA.set({ page: page });
+    ReactGA.pageview(page);
   };
 
   const store = useStore();

@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import createPersistedState from 'use-persisted-state';
+import ReactGA from 'react-ga';
 
 const useAppState = createPersistedState('fastCoursesAppState');
 
 let HAS_INITIAL_FETCHED = false;
 
 export const searchClient = algoliasearch(
-  'ESGJD5N2FJ',
-  'ca217ee9fca3cbd03a2bb0e7aa238ea8'
+  process.env.REACT_APP_ALGOLIA_ACCOUNT,
+  process.env.REACT_APP_ALGOLIA_TOKEN
 );
-export const searchIndex = searchClient.initIndex('courses');
+export const searchIndex = searchClient.initIndex(process.env.REACT_APP_ALGOLIA_INDEX);
 
 let cache = {};
 
@@ -59,9 +60,11 @@ export const useStore = () => {
     addClass: (id, hit, section) => {
       Object.assign(cache, { [id]: makeCacheEntry(hit, section) });
       setAppData({ ...appData, classes: appData.classes.concat(id) })
+      ReactGA.event({ category: 'Calendar', action: 'Add class', label: id });
     },
     removeClass: id => {
       setAppData({ ...appData, classes: appData.classes.filter(c => c !== id) })
+      ReactGA.event({ category: 'Calendar', action: 'Remove class', label: id });
     },
     getClassesForTerm: termId => {
       return appData.classes.map(c => cache[c]).filter(c => c && c.termId === termId);

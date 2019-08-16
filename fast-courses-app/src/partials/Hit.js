@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactGA from 'react-ga';
+import qs from 'qs';
 import * as util from '../util';
 
 const Hit = ({ hit, store }) => {
@@ -32,7 +34,7 @@ const Hit = ({ hit, store }) => {
           const onClick = starred ? () => removeClass(sectionId) : () => addClass(sectionId, hit, section);
 
           return (
-            <div key={`${sectionId}`} className="hit__schedule__entry" onClick={onClick}>
+            <div key={sectionId} className="hit__schedule__entry" onClick={onClick}>
               <span className="hit__star">{starred ? '★' : '☆'}</span>{' '}
               <span className="hit__schedule__term">{util.parseTerm(section.term).season}</span>{' '}&middot;{' '}{section.component}{' '}&middot;{' '}
               {section.schedules.map(schedule => {
@@ -41,7 +43,19 @@ const Hit = ({ hit, store }) => {
                     <span className="hit__schedule_time">{util.formatScheduleDayTime(schedule)}</span>
                     {' '}&middot;{' '}{schedule.location || 'no location'}{' '}&middot;{' '}
                     {!schedule.instructors || schedule.instructors.length === 0 ? 'no instructor' : ''}
-                    {util.intersperse((schedule.instructors || []).map(i => <a key={i.sunet} className="hit__instructor" onClick={e => e.stopPropagation()} href={`mailto:${i.sunet}@stanford.edu`}>{i.name}</a>), '; ')}
+                    {util.intersperse((schedule.instructors || []).map(i => {
+                      const target = {"refinementList":{"sections.schedules.instructors.name":[i.name]}};
+                      return (
+                        <a
+                          key={i.sunet}
+                          className="hit__instructor"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          onClick={e => e.stopPropagation()}
+                          href={`?${qs.stringify(target)}`}
+                        >{i.name}</a>
+                      );
+                    }), '; ')}
                   </span>
                 );
               })}
@@ -61,9 +75,25 @@ const Hit = ({ hit, store }) => {
         {hit.grading}
 
         <div className="hit__actions">
-          <a className="ais-Menu-link" rel="noopener noreferrer" target="_blank" href={`https://explorecourses.stanford.edu/search?view=catalog&filter-coursestatus-Active=on&page=0&q=${hit.subject}${hit.code}`}>explorecourses</a>
+          <ReactGA.OutboundLink
+            eventLabel={`exploreCourses:${hit.number}`}
+            className="ais-Menu-link"
+            rel="noopener noreferrer"
+            target="_blank"
+            to={`https://explorecourses.stanford.edu/search?view=catalog&filter-coursestatus-Active=on&page=0&q=${hit.subject}${hit.code}`}
+          >
+            explorecourses
+          </ReactGA.OutboundLink>
           {' '}&middot;{' '}
-          <a className="ais-Menu-link" rel="noopener noreferrer" target="_blank" href={`https://carta.stanford.edu/course/${hit.number}/${hit.sections.length ? hit.sections[0].termId : ''}`}>carta</a>
+          <ReactGA.OutboundLink
+            eventLabel={`carta:${hit.number}`}
+            className="ais-Menu-link"
+            rel="noopener noreferrer"
+            to={`https://carta.stanford.edu/course/${hit.number}/${hit.sections.length ? hit.sections[0].termId : ''}`}
+            target="_blank"
+          >
+            carta
+          </ReactGA.OutboundLink>
         </div>
       </div>
     </div>
