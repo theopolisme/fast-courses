@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import createPersistedState from 'use-persisted-state';
 import ReactGA from 'react-ga';
@@ -9,7 +9,8 @@ let HAS_INITIAL_FETCHED = false;
 
 export const searchClient = algoliasearch(
   process.env.REACT_APP_ALGOLIA_ACCOUNT,
-  process.env.REACT_APP_ALGOLIA_TOKEN
+  process.env.REACT_APP_ALGOLIA_TOKEN,
+  { _useRequestCache: true }
 );
 export const searchIndex = searchClient.initIndex(process.env.REACT_APP_ALGOLIA_INDEX);
 
@@ -24,8 +25,14 @@ const makeCacheEntry = (hit, section) => {
   };
 }
 
+const fetchExtendedCourse = (id) => {
+  return fetch(`${process.env.REACT_APP_ENDPOINT}courses/${id}`)
+    .then(r => r.json());
+}
+
 export const useStore = () => {
   const [appData, setAppData] = useAppState({ classes: [] });
+  const [extendedData, setExtendedData] = useState({});
 
   // On initial load, fetch all missing
   useEffect(() => {
@@ -69,6 +76,20 @@ export const useStore = () => {
     },
     getClassesForTerm: termId => {
       return appData.classes.map(c => cache[c]).filter(c => c && c.termId === termId);
+    },
+    getExtendedData: id => {
+      if (extendedData[id]) {
+        return extendedData[id];
+      }
+
+      fetchExtendedCourse(id)
+        .then(c => setExtendedData({ ...extendedData, [id]: c }))
+        .catch(e => {
+          console.error(e);
+          setExtendedData({ ...extendedData, [id]: { error: e.message } });
+        });
+
+      return { loading: true };
     }
   };
 };

@@ -15,10 +15,19 @@ def get_index():
     return client.init_index(os.getenv('ALGOLIA_INDEX'))
 
 
-def process_file(name, f, index):
+def process_file(name, f, index, counts, ratings):
     print('  Uploading', name)
     try:
         courses = json.load(f)
+        for c in courses:
+            oid = c['objectID']
+            c['numReviews'] = counts.get(oid, 0)
+            if oid in ratings:
+                c['currentScore'] = ratings[oid]['current_score']
+                c['currentScoreNormalized'] = \
+                    ratings[oid]['current_score_normalized']
+                c['currentScoreCount'] = ratings[oid]['current_score_count']
+                c['scoreHistory'] = ratings[oid]['scores']
         res = index.save_objects(courses)
         print('    Got Algolia res', res)
     except Exception as e:
@@ -30,11 +39,16 @@ def process_file(name, f, index):
 def main():
     parser = argparse.ArgumentParser(description='fast-courses upload')
     parser.add_argument('--pattern', '-p', type=str)
+    parser.add_argument('--counts', '-c', type=argparse.FileType('r'))
+    parser.add_argument('--ratings', '-r', type=argparse.FileType('r'))
     parser.add_argument('files', nargs='*', type=argparse.FileType('r'),
                         default=[sys.stdin])
     args = parser.parse_args()
 
     print('Uploading serialized JSON to Algolia...')
+
+    counts = json.load(args.counts)
+    ratings = json.load(args.ratings)
 
     if args.pattern:
         names = glob(args.pattern)
@@ -45,7 +59,7 @@ def main():
     index = get_index()
 
     for f in files:
-        process_file(f.name, f, index)
+        process_file(f.name, f, index, counts, ratings)
 
     print('Finished uploading serialized JSON to Algolia...')
 

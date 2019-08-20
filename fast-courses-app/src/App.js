@@ -48,6 +48,20 @@ const Header = React.forwardRef((props, ref) => (
   </header>
 ));
 
+const sortTerms = items => util.sortTerms(items, t => t.label);
+const sortScheduleDays = items =>
+  items.map(item => ({
+    ...item,
+    label: util.formatDays(item.label),
+  }));
+const sortUnits = items => {
+  let res = items.sort((a,b) => +a.label - +b.label).map(item => ({
+    ...item,
+    label: `${item.label} unit${item.label === '1' ? '' : 's'}`
+  }));
+  return res;
+};
+
 const App = ({ location, history }) => {
   const [searchState, setSearchState] = useState(urlToSearchState(location));
   const [debouncedSetState, setDebouncedSetState] = useState(null);
@@ -59,7 +73,7 @@ const App = ({ location, history }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSearchStateChange = updatedSearchState => {
+  const onSearchStateChange = (updatedSearchState, initial) => {
     // Handle scroll
     const top = ref.current.getBoundingClientRect().height + 32;
     if (window.scrollY >= top) {
@@ -104,9 +118,7 @@ const App = ({ location, history }) => {
               <Panel header="Term">
                 <RefinementList
                   attribute="sections.term"
-                  transformItems={items =>
-                    util.sortTerms(items, t => t.label)
-                  }
+                  transformItems={sortTerms}
                 />
               </Panel>
 
@@ -129,12 +141,7 @@ const App = ({ location, history }) => {
               <Panel header="Schedule">
                 <RefinementList
                   attribute="sections.schedules.days"
-                  transformItems={items =>
-                    items.map(item => ({
-                      ...item,
-                      label: util.formatDays(item.label),
-                    }))
-                  }
+                  transformItems={sortScheduleDays}
                 />
               </Panel>
 
@@ -143,13 +150,7 @@ const App = ({ location, history }) => {
                   attribute="units"
                   limit={6}
                   showMore
-                  transformItems={items => {
-                    let res = items.sort((a,b) => +a.label - +b.label).map(item => ({
-                      ...item,
-                      label: `${item.label} unit${item.label === '1' ? '' : 's'}`
-                    }));
-                    return res;
-                  }}
+                  transformItems={sortUnits}
                 />
               </Panel>
 
