@@ -19,6 +19,8 @@ const Hit = ({ hit, store }) => {
     sections = sections.filter(s => s.component === 'LEC');
   }
 
+  const data = open ? getExtendedData(hit.objectID) : {};
+
   return (
     <div className="hit">
       <div className="hit__header">
@@ -105,16 +107,14 @@ const Hit = ({ hit, store }) => {
       </div>
 
       <div
-        className={`hit__reviews ${open ? '' : 'closed'} ${!hit.numReviews ? 'disabled' : ''}`}
+        className={`hit__reviews${open ? '' : ' closed'}${!hit.numReviews ? ' disabled' : ''}${data.loading ? ' ui fluid placeholder' : ''}`}
         onClick={(open || !hit.numReviews) ? null : () => setOpen(true)}
       >
         {open ?
           (() => {
-            const data = getExtendedData(hit.objectID);
-
             if (data.loading) {
               return (
-                <div>Loading course stats & reviews...</div>
+                <div>&nbsp;</div>
               );
             } else if (data.error) {
               return (
