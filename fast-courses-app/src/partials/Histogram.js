@@ -5,7 +5,7 @@ import ReactTooltip from 'react-tooltip'
 
 const LABEL_STYLE = {
   marginTop: '0.25rem',
-  fontSize: '0.1rem',
+  fontSize: 9,
   textAlign: 'center'
 };
 

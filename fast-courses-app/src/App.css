@@ -388,7 +388,11 @@ body.scrolled .sticky {
     width: 100%;
     border-right: 0;
     border-bottom: 1px dashed #e8e2ff;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding-bottom: 1rem;
+  }
+
+  .hit__reviews__right {
+    padding-bottom: 0.5rem;
   }
 }

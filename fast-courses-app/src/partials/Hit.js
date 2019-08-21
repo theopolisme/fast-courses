@@ -159,7 +159,7 @@ const Hit = ({ hit, store }) => {
             );
           })()
         : hit.numReviews ?
-          <div className="hit__reviews__trigger">Expand for more, including {hit.numReviews} recent student review{hit.numReviews === 1 ? '' : 's'}</div>
+          <div className="hit__reviews__trigger">Expand for {hit.numReviews} recent student review{hit.numReviews === 1 ? '' : 's'}</div>
         :
           <div className="hit__reviews__trigger">No reviews available</div>
         }
