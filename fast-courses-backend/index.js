@@ -40,6 +40,14 @@ const normalizeScore = ({ score, count, globalAverage }) => {
 
   const db = client.db(dbName);
 
+  await db.collection('reviews').createIndex(
+    { 'Course ID': 1 },
+    {
+      partialFilterExpression: { [REVIEW_KEY]: { $exists: true } },
+      name: 'fast-courses.reviews.reviewsByCourse'
+    }
+  );
+
   app.use(cors({
     origin: true
   }));
