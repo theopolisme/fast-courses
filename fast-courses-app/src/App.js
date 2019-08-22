@@ -38,10 +38,10 @@ const Sticky = ({ className, children }) => {
   return <div className={`${className} sticky`}>{children}</div>;
 };
 
-const Header = React.forwardRef(({ user, ...rest }, ref) => (
+const Header = React.forwardRef(({ user, onTitleClick, ...rest }, ref) => (
   <header className="header" ref={ref} {...rest}>
     <h1 className="header-title">
-      <a href="/">fast-courses<span>▸</span></a>
+      <a href="/" onClick={e => { if (!e.metaKey) { e.preventDefault(); onTitleClick(); } }}>fast-courses<span>▸</span></a>
     </h1>
     <p className="header-subtitle">
       a better way to search Stanford courses* <span className="mobile-note">(more features on desktop!)</span>
@@ -111,7 +111,8 @@ const App = ({ location, history }) => {
 
   return (
     <div>
-      <Header ref={ref} user={user} />
+      <style>{"#loader { display: none; }"}</style>
+      <Header ref={ref} user={user} onTitleClick={() => onSearchStateChange({})} />
       <InstantSearch
         searchClient={searchClient}
         indexName="courses"
