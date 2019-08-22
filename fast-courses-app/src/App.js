@@ -12,8 +12,10 @@ import {
 import qs from 'qs';
 import ReactGA from 'react-ga';
 
+import IconButton from './partials/IconButton';
 import Hits from './partials/Hits';
 import RightPanel from './partials/RightPanel';
+import ReactSidebar from "react-sidebar";
 
 import { useAuth } from './auth';
 import { searchClient, useStore } from './store';
@@ -44,7 +46,7 @@ const Header = React.forwardRef(({ user, onTitleClick, ...rest }, ref) => (
       <a href="/" onClick={e => { if (!e.metaKey) { e.preventDefault(); onTitleClick(); } }}>fast-courses<span>▸</span></a>
     </h1>
     <p className="header-subtitle">
-      a better way to search Stanford courses* <span className="mobile-note">(more features on desktop!)</span>
+      a better way to search Stanford courses* <span className="mobile-note"></span>
     </p>
     <p className="header-user">{user.name}</p>
   </header>
@@ -70,6 +72,10 @@ const App = ({ location, history }) => {
   const [debouncedSetState, setDebouncedSetState] = useState(null);
   const ref = useRef(null);
 
+  const isMobile = util.useMedia(['(max-width: 980px)'], [true], false);
+  const [leftOpen, setLeftOpen] = useState(false);
+  const [rightOpen, setRightOpen] = useState(false);
+
   // Trigger an initial state change to update log
   useEffect(() => {
     onSearchStateChange(searchState, true);
@@ -78,9 +84,10 @@ const App = ({ location, history }) => {
 
   const onSearchStateChange = (updatedSearchState, initial) => {
     // Handle scroll
-    if (!initial) {
+    if (!initial && ref && ref.current) {
       const top = ref.current.getBoundingClientRect().height + 32;
-      if (window.scrollY >= top) {
+      if (isMobile || window.scrollY >= top) {
+        console.log('scroll', top)
         window.scrollTo(0, top);
       }
     }
@@ -109,107 +116,135 @@ const App = ({ location, history }) => {
     return <div />;
   }
 
-  return (
+  const SidebarContainer = isMobile ? 'div' : Sticky;
+
+  const PageLeftPanel = (
+    <SidebarContainer className="search-panel__filters">
+      <div>
+        <ClearRefinements />
+
+        <Panel header="Term">
+          <RefinementList
+            attribute="sections.term"
+            transformItems={sortTerms}
+          />
+        </Panel>
+
+        <Panel header="Subject">
+          <RefinementList
+            attribute="subject"
+            searchable
+            limit={5}
+          />
+        </Panel>
+
+        <Panel header="Instructor">
+          <RefinementList
+            attribute="sections.schedules.instructors.name"
+            searchable
+            limit={5}
+          />
+        </Panel>
+
+        <Panel header="Schedule">
+          <RefinementList
+            attribute="sections.schedules.days"
+            transformItems={sortScheduleDays}
+          />
+        </Panel>
+
+        <Panel header="Units">
+          <RefinementList
+            attribute="units"
+            limit={6}
+            showMore
+            transformItems={sortUnits}
+          />
+        </Panel>
+
+        <Panel header="Sort By">
+          <SortBy
+            defaultRefinement="courses"
+            items={[
+              { value: 'courses', label: 'Best match' },
+              { value: 'courses_number_asc', label: 'Course number' },
+            ]}
+          />
+        </Panel>
+      </div>
+    </SidebarContainer>
+  );
+
+  const PageRightPanel = (
+    <SidebarContainer className="search-panel__right">
+      <RightPanel updateSearchState={onSearchStateChange} getClassesForTerm={store.getClassesForTerm} />
+    </SidebarContainer>
+  );
+
+  const PageContent = (
     <div>
       <style>{"#loader { display: none; }"}</style>
       <Header ref={ref} user={user} onTitleClick={() => onSearchStateChange({})} />
-      <InstantSearch
-        searchClient={searchClient}
-        indexName="courses"
-        searchState={searchState}
-        onSearchStateChange={onSearchStateChange}
-        createURL={createURL}
-      >
-        <div className="search-panel">
-
-          <Sticky className="search-panel__filters">
-            <div>
-              <ClearRefinements />
-
-              <Panel header="Term">
-                <RefinementList
-                  attribute="sections.term"
-                  transformItems={sortTerms}
-                />
-              </Panel>
-
-              <Panel header="Subject">
-                <RefinementList
-                  attribute="subject"
-                  searchable
-                  limit={5}
-                />
-              </Panel>
-
-              <Panel header="Instructor">
-                <RefinementList
-                  attribute="sections.schedules.instructors.name"
-                  searchable
-                  limit={5}
-                />
-              </Panel>
-
-              <Panel header="Schedule">
-                <RefinementList
-                  attribute="sections.schedules.days"
-                  transformItems={sortScheduleDays}
-                />
-              </Panel>
-
-              <Panel header="Units">
-                <RefinementList
-                  attribute="units"
-                  limit={6}
-                  showMore
-                  transformItems={sortUnits}
-                />
-              </Panel>
-
-              <Panel header="Sort By">
-                <SortBy
-                  defaultRefinement="courses"
-                  items={[
-                    { value: 'courses', label: 'Best match' },
-                    { value: 'courses_number_asc', label: 'Course number' },
-                  ]}
-                />
-              </Panel>
-            </div>
-          </Sticky>
-
-          <div className="search-panel__results">
-            <div className="search-panel__query">
+      <div className="search-panel">
+        {!isMobile && PageLeftPanel}
+        <div className="search-panel__results">
+          <div className="search-panel__query">
+            <div className="search-panel__searchbox">
+              {isMobile && <IconButton icon="filter" onClick={() => setLeftOpen(true)} />}
               <SearchBox
-                className="search-panel__searchbox"
                 translations={{placeholder: "Search by course number, title, description, anything really..."}}
                 showLoadingIndicator
               />
-              <div className="search-panel__stats"><Stats /></div>
+              {isMobile && <IconButton icon="calendar" onClick={() => setRightOpen(true)} />}
             </div>
-
-            <Hits store={store} />
-
-            <div className="pagination">
-              <Pagination />
-            </div>
-
-            <div className="attribution">
-              <div>
-                <a className="ais-Menu-link" href="https://github.com/theopolisme/fast-courses">open source</a>
-                {' '}&middot;{' '}
-                <a className="ais-Menu-link" href="mailto:tcp@stanford.edu">questions?</a>
-              </div>
-              <div>* not affiliated with Stanford University</div>
-            </div>
-
+            <div className="search-panel__stats"><Stats /></div>
           </div>
 
-          <Sticky className="search-panel__right">
-            <RightPanel updateSearchState={onSearchStateChange} getClassesForTerm={store.getClassesForTerm} />
-          </Sticky>
+          <Hits store={store} />
+
+          <div className="pagination">
+            <Pagination />
+          </div>
+
+          <div className="attribution">
+            <div>
+              <a className="ais-Menu-link" href="https://github.com/theopolisme/fast-courses">open source</a>
+              {' '}&middot;{' '}
+              <a className="ais-Menu-link" href="mailto:tcp@stanford.edu">questions?</a>
+            </div>
+            <div>* not affiliated with Stanford University</div>
+          </div>
         </div>
-      </InstantSearch>
+        {!isMobile && PageRightPanel}
+      </div>
     </div>
+  );
+
+  let body;
+
+  if (isMobile) {
+    const sidebarStyles = {sidebar: {zIndex: 999}, overlay: {zIndex: 998}};
+    body = (
+      <ReactSidebar open={leftOpen} onSetOpen={setLeftOpen} sidebar={PageLeftPanel} styles={sidebarStyles}>
+      <ReactSidebar open={rightOpen} onSetOpen={setRightOpen} pullRight sidebar={PageRightPanel} styles={sidebarStyles}>
+        {PageContent}
+      </ReactSidebar>
+      </ReactSidebar>
+    );
+  } else {
+    body = PageContent;
+  }
+
+  return (
+    <InstantSearch
+      searchClient={searchClient}
+      indexName="courses"
+      searchState={searchState}
+      onSearchStateChange={onSearchStateChange}
+      createURL={createURL}
+    >
+      {body}
+    </InstantSearch>
   );
 };
 
