@@ -85,10 +85,9 @@ const App = ({ location, history }) => {
   const onSearchStateChange = (updatedSearchState, initial) => {
     // Handle scroll
     if (!initial && ref && ref.current) {
-      const top = ref.current.getBoundingClientRect().height + 32;
+      const top = ref.current.getBoundingClientRect().height + (isMobile ? 16 : 32);
       if (isMobile || window.scrollY >= top) {
-        console.log('scroll', top)
-        window.scrollTo(0, top);
+        (isMobile ? document.getElementById('appContent') : window).scrollTo(0, top);
       }
     }
 
@@ -226,13 +225,13 @@ const App = ({ location, history }) => {
     const sidebarStyles = {sidebar: {zIndex: 999}, overlay: {zIndex: 998}};
     body = (
       <ReactSidebar open={leftOpen} onSetOpen={setLeftOpen} sidebar={PageLeftPanel} styles={sidebarStyles}>
-      <ReactSidebar open={rightOpen} onSetOpen={setRightOpen} pullRight sidebar={PageRightPanel} styles={sidebarStyles}>
+      <ReactSidebar open={rightOpen} onSetOpen={setRightOpen} pullRight sidebar={PageRightPanel} styles={sidebarStyles} contentId="appContent">
         {PageContent}
       </ReactSidebar>
       </ReactSidebar>
     );
   } else {
-    body = PageContent;
+    body = <div id="appContent">{PageContent}</div>;
   }
 
   return (
