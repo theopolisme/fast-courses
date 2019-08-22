@@ -133,7 +133,7 @@ const serializeUserSession = (session, data) => ({
       const now = (new Date()).toISOString();
       await db.collection('users').updateOne({ _id: email }, {
         $set: { last_login: now },
-        $setOnInsert: { first_login: now  }
+        $setOnInsert: { first_login: now, classes: [] }
       }, { upsert: true });
 
       const redirect = req.session.redirect;
