@@ -40,6 +40,11 @@ em {
 
 .header-subtitle {
   font-size: 1.2rem;
+  flex: 1;
+}
+
+.header-user {
+  font-size: 1.2rem;
 }
 
 .search-panel {

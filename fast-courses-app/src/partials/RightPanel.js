@@ -8,7 +8,6 @@ import ReactTooltip from 'react-tooltip'
 import * as util from '../util';
 
 import ColorHash from 'color-hash';
-import { useStore } from '../store';
 
 const colorHash = new ColorHash();
 
@@ -102,9 +101,7 @@ const TermView = ({ term, classes, updateSearchState }) => {
   );
 }
 
-const RightPanel = ({ updateSearchState, ...rest }) => {
-  const { getClassesForTerm } = useStore();
-
+const RightPanel = ({ updateSearchState, getClassesForTerm, ...rest }) => {
   return (
     <div {...rest}>
       {CURRENT_TERMS.map(t => (

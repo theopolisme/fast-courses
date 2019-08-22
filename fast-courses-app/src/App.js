@@ -15,6 +15,7 @@ import ReactGA from 'react-ga';
 import Hits from './partials/Hits';
 import RightPanel from './partials/RightPanel';
 
+import { useAuth } from './auth';
 import { searchClient, useStore } from './store';
 import * as util from './util';
 
@@ -37,14 +38,15 @@ const Sticky = ({ className, children }) => {
   return <div className={`${className} sticky`}>{children}</div>;
 };
 
-const Header = React.forwardRef((props, ref) => (
-  <header className="header" ref={ref} {...props}>
+const Header = React.forwardRef(({ user, ...rest }, ref) => (
+  <header className="header" ref={ref} {...rest}>
     <h1 className="header-title">
       <a href="/">fast-courses<span>▸</span></a>
     </h1>
     <p className="header-subtitle">
       a better way to search Stanford courses* <span className="mobile-note">(more features on desktop!)</span>
     </p>
+    <p className="header-user">{user.name}</p>
   </header>
 ));
 
@@ -63,21 +65,24 @@ const sortUnits = items => {
 };
 
 const App = ({ location, history }) => {
+  const { needsAuth, user, authenticate } = useAuth({ autoAuthenticate: true });
   const [searchState, setSearchState] = useState(urlToSearchState(location));
   const [debouncedSetState, setDebouncedSetState] = useState(null);
   const ref = useRef(null);
 
   // Trigger an initial state change to update log
   useEffect(() => {
-    onSearchStateChange(searchState);
+    onSearchStateChange(searchState, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSearchStateChange = (updatedSearchState, initial) => {
     // Handle scroll
-    const top = ref.current.getBoundingClientRect().height + 32;
-    if (window.scrollY >= top) {
-      window.scrollTo(0, top);
+    if (!initial) {
+      const top = ref.current.getBoundingClientRect().height + 32;
+      if (window.scrollY >= top) {
+        window.scrollTo(0, top);
+      }
     }
 
     // Debounced URL update
@@ -97,11 +102,16 @@ const App = ({ location, history }) => {
     ReactGA.pageview(page);
   };
 
-  const store = useStore();
+  const store = useStore({ user });
+
+  // Render nothing until authenticated
+  if (!user) {
+    return <div />;
+  }
 
   return (
     <div>
-      <Header ref={ref} />
+      <Header ref={ref} user={user} />
       <InstantSearch
         searchClient={searchClient}
         indexName="courses"
@@ -194,7 +204,7 @@ const App = ({ location, history }) => {
           </div>
 
           <Sticky className="search-panel__right">
-            <RightPanel updateSearchState={onSearchStateChange} />
+            <RightPanel updateSearchState={onSearchStateChange} getClassesForTerm={store.getClassesForTerm} />
           </Sticky>
         </div>
       </InstantSearch>

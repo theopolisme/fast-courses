@@ -22,8 +22,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.0",
     "react-tooltip": "^3.10.0",
-    "rheostat": "2",
-    "use-persisted-state": "^0.3.0"
+    "rheostat": "2"
   },
   "devDependencies": {
     "eslint-config-algolia": "13.2.3",

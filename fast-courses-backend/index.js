@@ -1,9 +1,16 @@
 require('dotenv').config()
 
 const MongoClient = require('mongodb').MongoClient;
+const axios = require('axios');
+const qs = require('qs');
 const express = require('express');
+const asyncHandler = require('express-async-handler');
 const cors = require('cors');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const app = express();
+ 
+const { decodeAccessToken } = require('./auth');
 
 const TERMS = {
   '2018-2019 Autumn': 152261,
@@ -22,6 +29,14 @@ const normalizeScore = ({ score, count, globalAverage }) => {
   return (count / (count + MIN_RATINGS)) * score + (MIN_RATINGS / (count + MIN_RATINGS)) * globalAverage;
   // return (P * score) + (5) * (1 - P) * (1 - Math.pow(Math.E, -count / Q));
 };
+
+const serializeUserSession = (session, data) => ({
+  email: session.user,
+  name: session.user.split('@')[0],
+  last_login: data.last_login,
+  first_login: data.first_login,
+  classes: data.classes || []
+});
 
 (async function() {
   const url = process.env.MONGODB_URI;
@@ -48,15 +63,93 @@ const normalizeScore = ({ score, count, globalAverage }) => {
     }
   );
 
+  app.use(express.json());
+
+  app.use(session({
+      name: 'fast-courses.sid',
+      store: new MongoStore({ client: client }),
+      saveUninitialized: false,
+      resave: false,
+      secret: process.env.SECRET
+  }));
+
   app.use(cors({
-    origin: true
+    origin: true,
+    credentials: true,
   }));
 
   app.get('/', (req, res) => {
     res.send({ message: 'Welcome to the fast-courses API!' });
   });
 
-  app.get('/meta/ratings', async (req, res) => {
+  app.get('/self', asyncHandler(async (req, res, next) => {
+    if (req.session.user) {
+      const data = await db.collection('users').findOne({ _id: req.session.user });
+      return res.send(serializeUserSession(req.session, data));
+    } else {
+      return res.status(401).send({ error: { message: 'Not authorized' } });
+    }
+  }));
+
+  app.post('/self', asyncHandler(async (req, res, next) => {
+    if (req.session.user) {
+      const { op, id } = req.body.classes;
+      if (['$addToSet', '$pull'].indexOf(op) === -1) throw new Error('Unsupported operation');
+      const data = await db.collection('users').updateOne({ _id: req.session.user }, { [op]: { classes: id } });
+      return res.send({ success: true });
+    } else {
+      return res.status(401).send({ error: { message: 'Not authorized' } });
+    }
+  }));
+
+  app.get('/login', (req, res) => {
+    const endpoint = `${process.env.AUTH_DOMAIN}oauth2/authorize?${qs.stringify({
+      identity_provider: 'Stanford',
+      redirect_uri: `${process.env.APP_DOMAIN}authenticate`,
+      client_id: process.env.AUTH_CLIENT_ID,
+      response_type: 'code',
+      scope: 'email profile'
+    })}`;
+    req.session.redirect = req.query.redirect;
+    res.redirect(endpoint);
+  });
+
+  app.get('/authenticate', asyncHandler(async (req, res, next) => {
+    try {
+      const response = await axios.post(`${process.env.AUTH_DOMAIN}oauth2/token`, qs.stringify({
+        grant_type: 'authorization_code',
+        client_id: process.env.AUTH_CLIENT_ID,
+        code: req.query.code,
+        redirect_uri: `${process.env.APP_DOMAIN}authenticate`
+      }), {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        }
+      });
+      const result = await decodeAccessToken(response.data.access_token);
+      const email = result.username.replace(/^Stanford_/, '');
+      req.session.user = email;
+
+      const now = (new Date()).toISOString();
+      await db.collection('users').updateOne({ _id: email }, {
+        $set: { last_login: now },
+        $setOnInsert: { first_login: now  }
+      }, { upsert: true });
+
+      const redirect = req.session.redirect;
+      delete req.session.redirect;
+      return res.redirect(redirect);
+    } catch (err) {
+      if (err.response && err.response.data) { return next(new Error(err.response.data.error)); }
+      return next(err);
+    }
+  }));
+
+  app.get('/meta/ratings', asyncHandler(async (req, res) => {
+    if (req.query.secret !== process.env.SECRET) {
+      return res.status(401).send({ error: { message: 'Not authorized' } });
+    }
+
     const count = await db.collection('reviews').aggregate([
       { $match: {
         [QUALITY_KEY]: { $exists: true },
@@ -115,9 +208,13 @@ const normalizeScore = ({ score, count, globalAverage }) => {
     });
 
     res.send(result);
-  });
+  }));
 
-  app.get('/meta/counts', async (req, res) => {
+  app.get('/meta/counts', asyncHandler(async (req, res) => {
+    if (req.query.secret !== process.env.SECRET) {
+      return res.status(401).send({ error: { message: 'Not authorized' } });
+    }
+
     const count = await db.collection('reviews').aggregate([
       { $match: {
         [REVIEW_KEY]: { $exists: true }
@@ -132,9 +229,13 @@ const normalizeScore = ({ score, count, globalAverage }) => {
       return o;
     }, {});
     res.send(result);
-  });
+  }));
 
-  app.get('/courses/:id', async (req, res) => {
+  app.get('/courses/:id', asyncHandler(async (req, res) => {
+    if (!req.session.user) {
+      return res.status(401).send({ error: { message: 'Not authorized' } });
+    }
+
     const reviews = await db.collection('reviews').find({
       "Course ID": req.params.id,
       [REVIEW_KEY]: { $exists: true }
@@ -159,6 +260,11 @@ const normalizeScore = ({ score, count, globalAverage }) => {
       reviews: advice,
       hours: hours
     });
+  }));
+
+  app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res.status(err.status || 500).send({ error: { message: err.message } });
   });
 
   const port = process.env.PORT || 3030;
