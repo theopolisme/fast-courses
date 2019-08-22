@@ -65,7 +65,7 @@ const sortUnits = items => {
 };
 
 const App = ({ location, history }) => {
-  const { needsAuth, user, authenticate } = useAuth({ autoAuthenticate: true });
+  const { user } = useAuth({ autoAuthenticate: true });
   const [searchState, setSearchState] = useState(urlToSearchState(location));
   const [debouncedSetState, setDebouncedSetState] = useState(null);
   const ref = useRef(null);

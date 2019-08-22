@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
-import createPersistedState from 'use-persisted-state';
 import ReactGA from 'react-ga';
-
-const useAppState = createPersistedState('fastCoursesAppState');
 
 let HAS_INITIAL_FETCHED = false;
 
