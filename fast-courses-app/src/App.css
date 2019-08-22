@@ -410,4 +410,8 @@ body.scrolled .sticky {
   .hit__reviews__right {
     padding-bottom: 0.5rem;
   }
+
+  .header-user {
+    display: none;
+  }
 }
