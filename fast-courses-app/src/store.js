@@ -23,7 +23,7 @@ const makeCacheEntry = (hit, section) => {
 }
 
 const fetchExtendedCourse = (id) => {
-  return fetch(`${process.env.REACT_APP_ENDPOINT}courses/${id}`)
+  return fetch(`${process.env.REACT_APP_ENDPOINT}courses/${id}`, { credentials: 'include' })
     .then(r => r.json());
 }
 
@@ -57,6 +57,7 @@ export const useStore = ({ user }) => {
         query: '',
         filters: filters
       }, (err, res) => {
+        if (err) { return window.alert('Unable to fetch classes: ' + err.message); }
         const newCache = res.hits.reduce((updated, hit) => {
           hit.sections.forEach(section => {
             updated[`${hit.number}|${section.classId}`] = makeCacheEntry(hit, section);

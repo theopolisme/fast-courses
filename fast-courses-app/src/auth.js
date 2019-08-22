@@ -6,7 +6,7 @@ const fetchSelf = () => {
     .then(r => r.json());
 }
 
-const authenticate = () => {
+export const authenticate = () => {
   window.location.href = `${process.env.REACT_APP_ENDPOINT}login?${qs.stringify({
     redirect: window.location.href
   })}`;
