@@ -133,7 +133,6 @@ const App = ({ location, history }) => {
           <RefinementList
             attribute="subject"
             searchable
-            showMore
             limit={5}
           />
         </Panel>
@@ -142,7 +141,6 @@ const App = ({ location, history }) => {
           <RefinementList
             attribute="sections.schedules.instructors.name"
             searchable
-            showMore
             limit={5}
           />
         </Panel>
