@@ -36,8 +36,10 @@ const makeTime = seconds => {
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const TermView = ({ term, classes, updateSearchState }) => {
+const TermView = ({ term, classData, updateSearchState }) => {
   let minTime, maxTime;
+
+  const { classes, courses, indexedCourses } = classData;
 
   const events = classes.reduce((events, c) => {
     c.schedules.forEach(schedule => {
@@ -51,24 +53,24 @@ const TermView = ({ term, classes, updateSearchState }) => {
         if (!maxTime || end > maxTime) maxTime = end.replace(/:\d{2}:/, ':59:');
 
         events.push({
-          title: c.number,
+          title: `${c.number}${indexedCourses[c.number].multiple ? ` (${c.component})` : ''}`,
           start: `${date}T${start}`,
           end: `${date}T${end}`,
           color: colorHash.hex(c.number),
           url: `?query=${c.number}`,
-          extendedProps: { units: c.units }
+          extendedProps: c
         });
       });
     });
     return events;
   }, []);
 
-  const invisibleClasses = classes.filter(c => !c.schedules.length || c.schedules.every(s => !s.days));
+  const invisibleCourses = courses.filter(c => !c.schedules.length || c.schedules.every(s => !s.days));
 
-  const totalUnits = classes.reduce((t, c) => t + c.units, 0);
+  const totalUnits = courses.reduce((t, c) => t + c.units, 0);
 
-  const unitsSummary = classes.length ?
-    `${classes.sort((a, b) => b.units - a.units).map(c => `${c.number}: ${c.units} units`).join('<br>')}`
+  const unitsSummary = courses.length ?
+    `${courses.sort((a, b) => b.units - a.units).map(c => `${c.number}: ${c.units} units`).join('<br>')}`
     : 'No classes yet';
 
   return (
@@ -81,10 +83,10 @@ const TermView = ({ term, classes, updateSearchState }) => {
           updateSearchState({ query: event.title });
         }}
       />
-      {invisibleClasses.length ?
+      {invisibleCourses.length ?
         <div className="term__invisible">
           Not yet scheduled:
-          {' '}{util.intersperse(invisibleClasses.map(c => (
+          {' '}{util.intersperse(invisibleCourses.map(c => (
             <a
               href={`?query=${c.number}`}
               onClick={e => {
@@ -108,7 +110,7 @@ const RightPanel = ({ updateSearchState, getClassesForTerm, ...rest }) => {
         <TermView
           key={t.termId}
           term={t}
-          classes={getClassesForTerm(t.termId)}
+          classData={getClassesForTerm(t.termId)}
           updateSearchState={updateSearchState}
         />
       ))}

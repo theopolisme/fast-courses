@@ -87,7 +87,23 @@ export const useStore = ({ user }) => {
       persistUpdate({ op: '$pull', id });
     },
     getClassesForTerm: termId => {
-      return appData.classes.map(c => cache[c]).filter(c => c && c.termId === termId);
+      const classes = appData.classes.map(c => cache[c]).filter(c => c && c.termId === termId);
+
+      // In the case of LEC+DIS combo classes, ensure we only count units once
+      const indexedCourses = classes.reduce((o, c) => {
+        if (o[c.number]) {
+          o[c.number].multiple = true;
+          o[c.number].components.push(c.component);
+        } else {
+          o[c.number] = c;
+          o[c.number].components = [c.component];
+        }
+        return o;
+      }, {});
+
+      const courses = Object.values(indexedCourses);
+
+      return { classes, indexedCourses, courses };
     },
     getExtendedData: id => {
       if (extendedData[id]) {

@@ -32,7 +32,7 @@ const Calendar = ({ history, events, minTime, maxTime, onClick }) => {
           }
         }}
         eventRender={({ event, el }) => {
-          el.dataset.tip = `${event.title} (${event.extendedProps.units} units)`;
+          el.dataset.tip = `${event.extendedProps.number} (${event.extendedProps.units} units)`;
         }}
         eventPositioned={() => {
           ReactTooltip.rebuild();
