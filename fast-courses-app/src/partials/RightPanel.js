@@ -79,8 +79,8 @@ const TermView = ({ term, classData, updateSearchState }) => {
         events={events}
         minTime={minTime}
         maxTime={maxTime}
-        onClick={event => {
-          updateSearchState({ query: event.title });
+        onClick={course => {
+          updateSearchState({ query: course.number });
         }}
       />
       {invisibleCourses.length ?

@@ -28,7 +28,7 @@ const Calendar = ({ history, events, minTime, maxTime, onClick }) => {
         eventClick={info => {
           if (!info.jsEvent.metaKey) {
             info.jsEvent.preventDefault();
-            onClick(info.event);
+            onClick(info.event.extendedProps);
           }
         }}
         eventRender={({ event, el }) => {
