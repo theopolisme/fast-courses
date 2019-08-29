@@ -96,14 +96,14 @@ def parse_courses_xml(doc):
                     gen_schedule['endTimestamp'] = parse_time(
                         schedule['endTime'])
 
-                    gen_section['schedules'].append(gen_schedule)
+                    # Fix whitespace in days
+                    if schedule['days']:
+                        gen_schedule['days'] = \
+                            re.sub(r'\s+', ' ', schedule['days']).strip()
+                    else:
+                        gen_schedule['days'] = None
 
-                # Fix whitespace in days
-                if schedule['days']:
-                    gen_schedule['days'] = \
-                        re.sub(r'\s+', ' ', schedule['days']).strip()
-                else:
-                    gen_schedule['days'] = None
+                    gen_section['schedules'].append(gen_schedule)
 
                 generated['sections'].append(gen_section)
 

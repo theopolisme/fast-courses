@@ -47,9 +47,9 @@ const Hit = ({ hit, store }) => {
             <div key={sectionId} className="hit__schedule__entry" onClick={onClick}>
               <span className="hit__star">{starred ? '★' : '☆'}</span>{' '}
               <span className="hit__schedule__term">{util.parseTerm(section.term).season}</span>{' '}&middot;{' '}{section.component}{' '}&middot;{' '}
-              {schedules.map(schedule => {
+              {util.intersperse(schedules.map(schedule => {
                 return (
-                  <span key={schedule.location}>
+                  <span key={`${schedule.location}${schedule.days}${schedule.startTimestamp}`}>
                     <span className="hit__schedule_time">{util.formatScheduleDayTime(schedule)}</span>
                     {' '}&middot;{' '}{schedule.location || 'no location'}{' '}&middot;{' '}
                     {!schedule.instructors || schedule.instructors.length === 0 ? 'no instructor' : ''}
@@ -68,7 +68,7 @@ const Hit = ({ hit, store }) => {
                     }), '; ')}
                   </span>
                 );
-              })}
+              }), '; ')}
             </div>
           );
         })}

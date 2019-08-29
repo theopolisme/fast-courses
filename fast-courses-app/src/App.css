@@ -13,11 +13,11 @@ em {
   font-style: normal;
 }
 
-.ais-ClearRefinements-button, .ais-CurrentRefinements-reset, .ais-GeoSearch-redo, .ais-GeoSearch-reset, .ais-HierarchicalMenu-showMore, .ais-InfiniteHits-loadPrevious, .ais-InfiniteHits-loadMore, .ais-InfiniteResults-loadMore, .ais-Menu-showMore, .ais-RefinementList-showMore {
+.ais-ClearRefinements-button, .ais-CurrentRefinements-reset, .ais-GeoSearch-redo, .ais-GeoSearch-reset, .ais-HierarchicalMenu-showMore, .ais-InfiniteHits-loadPrevious, .ais-InfiniteHits-loadMore, .ais-InfiniteResults-loadMore, .ais-Menu-showMore, .ais-RefinementList-showMore, .ais-RangeInput-submit {
   background-color: #8e43e7;
 }
 
-.ais-ClearRefinements-button:hover, .ais-ClearRefinements-button:focus, .ais-CurrentRefinements-reset:hover, .ais-CurrentRefinements-reset:focus, .ais-GeoSearch-redo:hover, .ais-GeoSearch-redo:focus, .ais-GeoSearch-reset:hover, .ais-GeoSearch-reset:focus, .ais-HierarchicalMenu-showMore:hover, .ais-HierarchicalMenu-showMore:focus, .ais-InfiniteHits-loadPrevious:hover, .ais-InfiniteHits-loadPrevious:focus, .ais-InfiniteHits-loadMore:hover, .ais-InfiniteHits-loadMore:focus, .ais-InfiniteResults-loadMore:hover, .ais-InfiniteResults-loadMore:focus, .ais-Menu-showMore:hover, .ais-Menu-showMore:focus, .ais-RefinementList-showMore:hover, .ais-RefinementList-showMore:focus {
+.ais-ClearRefinements-button:hover, .ais-ClearRefinements-button:focus, .ais-CurrentRefinements-reset:hover, .ais-CurrentRefinements-reset:focus, .ais-GeoSearch-redo:hover, .ais-GeoSearch-redo:focus, .ais-GeoSearch-reset:hover, .ais-GeoSearch-reset:focus, .ais-HierarchicalMenu-showMore:hover, .ais-HierarchicalMenu-showMore:focus, .ais-InfiniteHits-loadPrevious:hover, .ais-InfiniteHits-loadPrevious:focus, .ais-InfiniteHits-loadMore:hover, .ais-InfiniteHits-loadMore:focus, .ais-InfiniteResults-loadMore:hover, .ais-InfiniteResults-loadMore:focus, .ais-Menu-showMore:hover, .ais-Menu-showMore:focus, .ais-RefinementList-showMore:hover, .ais-RefinementList-showMore:focus, .ais-RangeInput-submit:hover, .ais-RangeInput-submit:focus {
   background-color: #7517e4;
 }
 

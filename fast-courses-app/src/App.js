@@ -8,6 +8,7 @@ import {
   Panel,
   Stats,
   SortBy,
+  RangeInput,
 } from 'react-instantsearch-dom';
 import qs from 'qs';
 import ReactGA from 'react-ga';
@@ -158,6 +159,19 @@ const App = ({ location, history }) => {
             limit={6}
             showMore
             transformItems={sortUnits}
+          />
+        </Panel>
+
+        <Panel header="Course number">
+          <RangeInput attribute="numberInt" />
+        </Panel>
+
+        <Panel header="Course suffix">
+          <RefinementList
+            attribute="numberSuffix"
+            searchable
+            limit={5}
+            showMore
           />
         </Panel>
 

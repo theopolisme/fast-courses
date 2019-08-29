@@ -3,6 +3,7 @@ import sys
 import argparse
 import json
 from glob import glob
+from itertools import takewhile
 from algoliasearch.search_client import SearchClient
 
 
@@ -21,6 +22,13 @@ def process_file(name, f, index, counts, ratings):
         courses = json.load(f)
         for c in courses:
             oid = c['objectID']
+
+            # For filtering by suffix/number
+            c['numberInt'] = int(''.join(takewhile(str.isdigit,
+                                                   c['code'])))
+            c['numberSuffix'] = c['code'].replace(str(c['numberInt']), '')
+
+            # Normalize for sorting/filtering purposes
             c['numReviews'] = counts.get(oid, 0)
             if oid in ratings:
                 c['currentScore'] = ratings[oid]['current_score']
@@ -28,6 +36,13 @@ def process_file(name, f, index, counts, ratings):
                     ratings[oid]['current_score_normalized']
                 c['currentScoreCount'] = ratings[oid]['current_score_count']
                 c['scoreHistory'] = ratings[oid]['scores']
+
+            # Reduce size
+            for section in c['sections']:
+                for schedule in section['schedules']:
+                    del schedule['startTime']
+                    del schedule['endTime']
+
         res = index.save_objects(courses)
         print('    Got Algolia res', res)
     except Exception as e:
