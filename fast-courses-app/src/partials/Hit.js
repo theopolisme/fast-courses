@@ -12,8 +12,8 @@ const Hit = ({ hit, store }) => {
   const [open, setOpen] = useState(false);
   const [reviewFilter, setReviewFilter] = useState('');
 
-  const tooManySections = hit.totalSections > hit.sections.length;
-  const filterLectureOnly = tooManySections && hit.sections.some(s => s.component === 'LEC') && hit.sections.some(s => s.component === 'DIS');
+  const tooManySections = hit.tooManySections || hit.totalSections > hit.sections.length;
+  const filterLectureOnly = hit.filterLectureOnly || (tooManySections && hit.sections.some(s => s.component === 'LEC') && hit.sections.some(s => s.component === 'DIS'));
   let sections = util.sortTerms(hit.sections, s => s.term, s => s.sectionNumber);
 
   if (filterLectureOnly) {

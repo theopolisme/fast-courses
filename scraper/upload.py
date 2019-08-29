@@ -37,6 +37,19 @@ def process_file(name, f, index, counts, ratings):
                 c['currentScoreCount'] = ratings[oid]['current_score_count']
                 c['scoreHistory'] = ratings[oid]['scores']
 
+            # Get rid of endless sections
+            c['sections'] = [s for s in c['sections']
+                             if s['component'] != 'CLK']
+
+            if c.get('totalSections', 0) > len(c['sections']):
+                c['tooManySections'] = True
+
+                if any(s['component'] == 'LEC' for s in c['sections']) and \
+                        any(s['component'] == 'DIS' for s in c['sections']):
+                    c['filterLectureOnly'] = True
+                    c['sections'] = [s for s in c['sections']
+                                     if s['component'] == 'LEC']
+
             # Reduce size
             for section in c['sections']:
                 for schedule in section['schedules']:
