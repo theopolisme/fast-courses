@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import ReactGA from 'react-ga';
+import * as Sentry from '@sentry/browser';
 
 import './index.css';
 import App from './App';
 
 const debug = process.env.NODE_ENV === 'development';
+
+Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID, {
   debug
