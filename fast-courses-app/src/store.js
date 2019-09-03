@@ -55,7 +55,8 @@ export const useStore = ({ user }) => {
 
       searchIndex.search({
         query: '',
-        filters: filters
+        filters: filters,
+        hitsPerPage: 1000,
       }, (err, res) => {
         if (err) { return window.alert('Unable to fetch classes: ' + err.message); }
         const newCache = res.hits.reduce((updated, hit) => {
