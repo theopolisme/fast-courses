@@ -189,6 +189,7 @@ const App = ({ location, history }) => {
             items={[
               { value: 'courses', label: 'Best match' },
               { value: 'courses_number_asc', label: 'Course number' },
+              { value: 'courses_raw_rating_desc', label: 'Raw rating' },
             ]}
           />
         </Panel>
