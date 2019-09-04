@@ -80,9 +80,17 @@ const Hit = ({ hit, store }) => {
       </div>
 
       <div className="hit__meta">
-        <strong>{hit.unitsMin === hit.unitsMax ? hit.unitsMin : `${hit.unitsMin}-${hit.unitsMax}`} {hit.unitsMax !== '1' ? 'units' : 'unit'}</strong>
-        {' '}&middot;{' '}
-        {hit.grading}
+        <div className="hit__meta__left">
+          <strong>{hit.unitsMin === hit.unitsMax ? hit.unitsMin : `${hit.unitsMin}-${hit.unitsMax}`} {hit.unitsMax !== '1' ? 'units' : 'unit'}</strong>
+          {' '}&middot;{' '}
+          {hit.grading}
+          {hit.gers && hit.gers.length ?
+            <React.Fragment>
+              {' '}&middot;{' '}
+              {util.intersperse(hit.gers.map(g => <span style={{whiteSpace: 'nowrap'}}>{g}</span>), ', ')}
+            </React.Fragment>
+          : null}
+        </div>
 
         <div className="hit__actions">
           <ReactGA.OutboundLink

@@ -135,7 +135,7 @@ body.scrolled .sticky {
 }
 
 .hit__meta, .hit__schedule {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   font-size: 0.85rem;
   color: #929292;
 }
@@ -148,8 +148,12 @@ body.scrolled .sticky {
   font-weight: bold;
 }
 
-.hit__actions {
-  float: right;
+.hit__meta {
+  display: flex;
+}
+
+.hit__meta__left {
+  flex-grow: 1;
 }
 
 .hit__schedule__entry {
@@ -170,12 +174,19 @@ body.scrolled .sticky {
   transform: scale(1.3);
 }
 
+.hit__actions {
+  margin-left: 1rem;
+  white-space: nowrap;
+  align-self: center;
+}
+
 .hit__actions a.ais-Menu-link, a.hit__instructor {
   display: inline;
   color: #7b60ed;
   font-size: inherit !important;
   text-decoration: none;
   z-index: 1;
+  line-height: 1;
 }
 
 .attribution {
@@ -422,8 +433,12 @@ body.scrolled .sticky {
     height: auto;
   }
 
+  .hit__meta {
+    display: block;
+  }
+
   .hit__actions {
-    float: none;
+    margin-left: 0;
   }
 
   .hit__reviews {

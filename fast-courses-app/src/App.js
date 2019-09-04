@@ -130,6 +130,14 @@ const App = ({ location, history }) => {
           />
         </Panel>
 
+        <Panel header="WAYS / GERs">
+          <RefinementList
+            attribute="gers"
+            searchable
+            limit={5}
+          />
+        </Panel>
+
         <Panel header="Subject">
           <RefinementList
             attribute="subject"

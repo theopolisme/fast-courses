@@ -56,6 +56,15 @@ def process_file(name, f, index, counts, ratings):
                     del schedule['startTime']
                     del schedule['endTime']
 
+            # Normalize GERS
+            def normalize_ger(ger):
+                if ger == 'way_ce':
+                    return 'WAY-CE'
+                else:
+                    return ger
+
+            c['gers'] = [normalize_ger(g) for g in c['gers']]
+
         res = index.save_objects(courses)
         print('    Got Algolia res', res)
     except Exception as e:
