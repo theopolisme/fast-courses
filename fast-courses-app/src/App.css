@@ -205,6 +205,16 @@ body.scrolled .sticky {
   cursor: pointer;
 }
 
+.search-panel__right .term_header .icon-button {
+    padding: 0;
+}
+
+.search-panel__right .term_header .icon-button svg {
+    width: 18px;
+    height: 18px;
+    vertical-align: bottom;
+}
+
 .calendar {
   color: #616161;
 }

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import WeekCalendar from './WeekCalendar';
 import {
   Panel,
 } from 'react-instantsearch-dom';
 import ReactTooltip from 'react-tooltip'
+
+import IconButton from './IconButton';
 
 import * as util from '../util';
 
@@ -36,7 +38,7 @@ const makeTime = seconds => {
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const TermView = ({ term, classData, updateSearchState }) => {
+const TermView = ({ term, classData, updateSearchState, setOpenTerm }) => {
   let minTime, maxTime;
 
   const { classes, courses, indexedCourses } = classData;
@@ -74,7 +76,13 @@ const TermView = ({ term, classData, updateSearchState }) => {
     : 'No classes yet';
 
   return (
-    <Panel header={<span>{term.term} <span className="term_header__units" data-tip={unitsSummary}>{totalUnits} units</span></span>}>
+    <Panel header={
+      <span className="term_header">
+        {term.term}
+        {/* &nbsp;<IconButton icon="zoom_in" onClick={() => setOpenTerm(term.termId)} />&nbsp; */}
+        <span className="term_header__units" data-tip={unitsSummary}>{totalUnits} units</span>
+      </span>
+    }>
       <WeekCalendar
         events={events}
         minTime={minTime}
@@ -104,6 +112,8 @@ const TermView = ({ term, classData, updateSearchState }) => {
 }
 
 const RightPanel = ({ updateSearchState, getClassesForTerm, ...rest }) => {
+  const [openTerm, setOpenTerm] = useState(null);
+
   return (
     <div {...rest}>
       {CURRENT_TERMS.map(t => (
@@ -112,6 +122,7 @@ const RightPanel = ({ updateSearchState, getClassesForTerm, ...rest }) => {
           term={t}
           classData={getClassesForTerm(t.termId)}
           updateSearchState={updateSearchState}
+          setOpenTerm={setOpenTerm}
         />
       ))}
       <ReactTooltip effect="solid" multiline={true} />
