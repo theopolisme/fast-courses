@@ -303,7 +303,7 @@ body.scrolled .sticky {
 }
 
 .hit__reviews__trigger {
-  font-weight: bold;
+  color: #7b60ed;
 }
 
 .hit__reviews.disabled .hit__reviews__trigger {
