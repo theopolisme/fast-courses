@@ -63,7 +63,7 @@ const Welcome = ({ show, onDismiss }) => (
 
           <ol>
             <li>Search above by course number, title, description, etc.</li>
-            <li>Filter and sort by term, WAYs, and more using the lefthand sidebar</li>
+            <li>Filter and sort by term, Ways, and more using the lefthand sidebar</li>
             <li>Click "Expand for recent student reviews" at the bottom of any result to read what other Stanford students have to say about it</li>
             <li>Pin classes to your schedule by clicking the ☆ next to the time</li>
           </ol>
