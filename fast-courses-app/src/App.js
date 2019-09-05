@@ -53,6 +53,29 @@ const Header = React.forwardRef(({ user, onTitleClick, ...rest }, ref) => (
   </header>
 ));
 
+const Welcome = ({ show, onDismiss }) => (
+  show ?
+    <div className="hit hit__welcome">
+      <div className="hit__reviews__close" onClick={onDismiss}>✕</div>
+      <div className="hit__body">
+        <div>
+          <strong>Welcome to a better way to discover Stanford courses.</strong> fast-courses is like ExploreCourses meets Carta... 1000x faster.
+
+          <ol>
+            <li>Search above by course number, title, description, etc.</li>
+            <li>Filter and sort by term, WAYs, and more using the lefthand sidebar</li>
+            <li>Click "Expand for recent student reviews" at the bottom of any result to read what other Stanford students have to say about it</li>
+            <li>Pin classes to your schedule by clicking the ☆ next to the time</li>
+          </ol>
+
+          This is an evolving project &ndash; please send feedback and feature requests!
+        </div>
+      </div>
+    </div>
+  :
+    null
+);
+
 const sortTerms = items => util.sortTerms(items, t => t.label);
 const sortScheduleDays = items =>
   items.map(item => ({
@@ -77,11 +100,21 @@ const App = ({ location, history }) => {
   const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
 
+  const [hasVisited, setHasVisited] = util.useLocalStorage('fastcourses__hasvisited', false);
+  const [hasDismissedWelcome, setHasDismissedWelcome] = util.useLocalStorage('fastcourses__hasdismissedwelcome', false);
+  const [showWelcome, setShowWelcome] = useState(!hasDismissedWelcome);
+
   // Trigger an initial state change to update log
   useEffect(() => {
+    setHasVisited(true);
     onSearchStateChange(searchState, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onWelcomeDismiss = () => {
+    setShowWelcome(false);
+    setHasDismissedWelcome(true);
+  };
 
   const onSearchStateChange = (updatedSearchState, initial) => {
     // Handle scroll
@@ -90,6 +123,10 @@ const App = ({ location, history }) => {
       if (isMobile || window.scrollY >= top) {
         (isMobile ? document.getElementById('appContent') : window).scrollTo(0, top);
       }
+    }
+
+    if (!initial || (hasVisited && location.search)) {
+      setShowWelcome(false);
     }
 
     // Debounced URL update
@@ -221,6 +258,8 @@ const App = ({ location, history }) => {
             </div>
             <div className="search-panel__stats"><Stats /></div>
           </div>
+
+          <Welcome show={showWelcome} onDismiss={onWelcomeDismiss} />
 
           <Hits store={store} />
 
