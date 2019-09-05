@@ -104,6 +104,10 @@ const App = ({ location, history }) => {
   const [hasDismissedWelcome, setHasDismissedWelcome] = util.useLocalStorage('fastcourses__hasdismissedwelcome', false);
   const [showWelcome, setShowWelcome] = useState(!hasDismissedWelcome);
 
+  // Check if active query / filters applied
+  const { fbclid, ...searchQueryState } = searchState;
+  const hasActiveQuery = Object.keys(searchQueryState).length;
+
   // Trigger an initial state change to update log
   useEffect(() => {
     setHasVisited(true);
@@ -125,7 +129,7 @@ const App = ({ location, history }) => {
       }
     }
 
-    if (!initial || (hasVisited && location.search)) {
+    if (!initial || (hasVisited && hasActiveQuery)) {
       setShowWelcome(false);
     }
 
