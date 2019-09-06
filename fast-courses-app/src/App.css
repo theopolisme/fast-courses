@@ -306,6 +306,10 @@ body.scrolled .sticky {
   color: #7b60ed;
 }
 
+.hit__reviews__trigger.disabled {
+  color: inherit;
+}
+
 .hit__reviews.disabled .hit__reviews__trigger {
   font-weight: initial;
 }
