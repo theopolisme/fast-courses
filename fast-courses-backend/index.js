@@ -35,7 +35,10 @@ const serializeUserSession = (session, data) => ({
   name: session.user.split('@')[0],
   last_login: data.last_login,
   first_login: data.first_login,
-  classes: data.classes || []
+  classes: data.classes || [],
+  planner_start_year: data.planner_start_year || 2019,
+  planner_settings: Object.assign({ show_starred: true, show_titles: true }, data.planner_settings),
+  planner: data.planner || {}
 });
 
 (async function() {
@@ -93,9 +96,32 @@ const serializeUserSession = (session, data) => ({
 
   app.post('/self', asyncHandler(async (req, res, next) => {
     if (req.session.user) {
-      const { op, id } = req.body.classes;
-      if (['$addToSet', '$pull'].indexOf(op) === -1) throw new Error('Unsupported operation');
-      const data = await db.collection('users').updateOne({ _id: req.session.user }, { [op]: { classes: id } });
+      const { op, value, field } = req.body;
+
+      const allowedOperations = [
+        { field: /^classes$/, ops: ['$set', '$addToSet', '$pull'] },
+        { field: /^planner_start_year$/, ops: ['$set'] },
+        { field: /^planner_settings/, ops: ['$set'] },
+        { field: /^planner\./, ops: ['$set'] },
+      ];
+
+      let allowed = false;
+      for (const operation of allowedOperations) {
+        if (operation.field.test(field)) {
+          if (operation.ops.indexOf(op) !== -1) {
+            allowed = true;
+            break;
+          } else {
+            throw new Error('Unsupported operation');
+          }
+        }
+      }
+
+      if (!allowed) {
+        throw new Error('Unrecognized operation');
+      }
+
+      const data = await db.collection('users').updateOne({ _id: req.session.user }, { [op]: { [field]: value } });
       return res.send({ success: true });
     } else {
       return res.status(401).send({ error: { message: 'Not authorized' } });

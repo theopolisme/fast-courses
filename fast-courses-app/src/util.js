@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 
 export function formatDays(days) {
   return days.replace(/\w+/g, w => {
@@ -100,6 +100,10 @@ export function getColorForScore(score) {
   }
 }
 
+export function makeUnitsString(hit) {
+  return `${hit.unitsMin === hit.unitsMax ? hit.unitsMin : `${hit.unitsMin}-${hit.unitsMax}`} ${hit.unitsMax !== '1' ? 'units' : 'unit'}`;
+}
+
 export function useMedia(queries, values, defaultValue) {
   // Array containing a media query list for each query
   const mediaQueryLists = queries.map(q => window.matchMedia(q));
@@ -168,3 +172,13 @@ export function useLocalStorage(key, initialValue) {
   return [storedValue, setValue];
 }
 
+export function useLockBodyScroll() {
+  useLayoutEffect(() => {
+    // Get original body overflow
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    // Prevent scrolling on mount
+    document.body.style.overflow = 'hidden';
+    // Re-enable scrolling when component unmounts
+    return () => document.body.style.overflow = originalStyle;
+  }, []); // Empty array ensures effect is only run on mount and unmount
+}

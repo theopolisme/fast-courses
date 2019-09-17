@@ -1,0 +1,237 @@
+.planner {
+  display: flex;
+  margin: 0 -0.5rem;
+  color: #212121;
+}
+
+.planner__column {
+  flex: 1 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0.5rem;
+  min-width: 0;
+}
+
+.planner__column__header {
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #3a4570;
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
+.planner__section {
+  margin: 0.75rem;
+  flex: 1;
+  box-shadow: 0 0 5px 2px rgba(167, 167, 167, 0.25);
+  border-radius: 0.25rem;
+  transition: 0.2s all ease-in-out;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.planner__section.collapsed {
+  flex: 0;
+  flex-basis: 25px;
+}
+
+.planner__options {
+  margin: 0.75rem;
+}
+
+.planner__section__header {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid #dcdcdc;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #3a4570;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.planner__section.collapsed .planner__section__header {
+}
+
+.planner__section__header__label {
+  flex: 1;
+}
+
+.planner__section__header__terms {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.5rem;
+}
+
+.planner__section__courses {
+  flex: 1;
+  /*display: flex;
+  flex-direction: column;*/
+  min-height: 20px;
+  overflow: scroll;
+}
+
+.planner__section__courses.dragging-over {
+  background-color: #e4e4e4;
+}
+
+.planner__section__course {
+  font-size: 0.8rem;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+  padding: 2px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 0.25rem;
+  border-left-width: 5px;
+  display: flex;
+  flex-direction: row;
+}
+
+.planner__section__course.starred {
+}
+
+.planner__section__course .title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.planner__section__course .units {
+  font-size: 0.5rem;
+}
+
+.planner__section__course .title:hover {
+  text-decoration: underline;
+}
+
+.planner__section__course .number {
+  font-weight: bold;
+}
+
+.planner__section__course .delete {
+  display: none;
+}
+.planner__section__course:hover .delete {
+  display: block;
+}
+.planner__section__course .delete:hover {
+  font-weight: bold;
+}
+
+.planner__section__course .star, .planner__section__course .delete {
+  cursor: pointer;
+  color: #7b60ed;
+}
+
+.planner__section__course .star:before {
+  content: '★';
+}
+
+.planner__section__course .star:hover:before {
+  content: '☆';
+}
+
+.planner__section__add_course {
+  padding: 0.3rem 0.5rem 0.2rem;
+  font-size: 0.7rem;
+  color: #3a3a3a;
+  cursor: pointer;
+}
+
+.planner__section__add_course .icon-button {
+  display: inline-block;
+  padding: 0;
+  vertical-align: -5px;
+}
+
+.planner__section__add_course .icon-button > svg {
+  height: 18px;
+  width: 18px;
+}
+
+.planner__section__add_course:hover, .planner__section__add_course.adding {
+  background-color: #e0e0e0;
+}
+
+.planner__section__add_course.adding {
+  position: relative;
+  padding: 0.1rem 0.3rem 0;
+}
+
+.planner__section__add_course .hit__reviews__close {
+  font-size: 0.9rem;
+  color: gray;
+  top: 8px;
+}
+
+.planner__section__add_course:hover .text {
+  text-decoration: underline;
+}
+
+.aa-input-search {
+  padding: 0.5rem 0.5rem;
+  border: 0;
+  background: 0;
+  outline: 0;
+  font-family: unset;
+  font-size: 0.8rem;
+}
+
+.aa-suggestion:hover {
+  color: #fff;
+  background-color: #bb8ff1;
+}
+
+.aa-dropdown-menus {
+  position: fixed;
+  border: 1px solid #ccc;
+  background: #fff;
+  max-height: 150px;
+  overflow: scroll;
+  box-shadow: 0 0 10px 3px rgba(0,0,0,0.05);
+  border-radius: 0 0 0.5rem 0.5rem;
+  margin-top: -1px;
+  z-index: 999999;
+}
+
+h2.aa-suggestions-category {
+  display: none;
+}
+
+span.aa-dropdown-menu {
+  margin-top: 5px;
+}
+
+.planner__tooltip {
+  max-width: 300px;
+  line-height: 1.25;
+}
+
+.planner__tooltip .score {
+  font-size: 0.7rem;
+  vertical-align: 0px;
+}
+
+.planner__tooltip__actions {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+}
+
+.planner__tooltip__actions span {
+  cursor: pointer;
+}
+
+.planner__tooltip__actions span:hover {
+  text-decoration: underline;
+}
+

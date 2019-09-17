@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactGA from 'react-ga';
+import { Link } from 'react-router-dom';
 import qs from 'qs';
 import * as util from '../util';
 import { authenticate } from '../auth';
@@ -7,9 +8,9 @@ import { authenticate } from '../auth';
 import Histogram from './Histogram';
 import Score from './Score';
 
-const Hit = ({ hit, store }) => {
+const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onViewInPlannerClick }) => {
   const { hasClass, addClass, removeClass, getExtendedData } = store;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(!!showExtended);
   const [reviewFilter, setReviewFilter] = useState('');
 
   const tooManySections = hit.tooManySections || hit.totalSections > hit.sections.length;
@@ -19,6 +20,8 @@ const Hit = ({ hit, store }) => {
   if (filterLectureOnly) {
     sections = sections.filter(s => s.component === 'LEC');
   }
+
+  const isPlanned = store.plannerHasCourse(hit.objectID);
 
   const data = open ? getExtendedData(hit.objectID) : {};
 
@@ -34,10 +37,11 @@ const Hit = ({ hit, store }) => {
       </div>
 
       <div className="hit__schedule">
-        {hit.sections.length === 0 ?
+        {hideSchedule ?
+          <span>No schedule available for {hiddenScheduleYear || 'this year'}</span>
+        : hit.sections.length === 0 ?
           <span>Not scheduled this year</span>
-        : null}
-        {sections.map(section => {
+        : sections.map(section => {
           const sectionId = `${hit.number}|${section.classId}`;
           const starred = hasClass(sectionId);
           const onClick = starred ? () => removeClass(sectionId) : () => addClass(sectionId, hit, section);
@@ -81,7 +85,7 @@ const Hit = ({ hit, store }) => {
 
       <div className="hit__meta">
         <div className="hit__meta__left">
-          <strong>{hit.unitsMin === hit.unitsMax ? hit.unitsMin : `${hit.unitsMin}-${hit.unitsMax}`} {hit.unitsMax !== '1' ? 'units' : 'unit'}</strong>
+          <strong>{util.makeUnitsString(hit)}</strong>
           {' '}&middot;{' '}
           {hit.grading}
           {hit.gers && hit.gers.length ?
@@ -112,6 +116,14 @@ const Hit = ({ hit, store }) => {
           >
             carta
           </ReactGA.OutboundLink>
+          <span className="planner-link-container">
+            {' '}&middot;{' '}
+            <Link
+              className={`ais-Menu-link plan-button${isPlanned ? ' planned' : ''}`}
+              to="/planner"
+              onClick={!isPlanned ? e => { e.preventDefault(); e.stopPropagation(); store.addPlannerCourse('staging', hit); } : (onViewInPlannerClick || undefined)}
+            >{isPlanned ? 'show in planner': 'plan'}</Link>
+          </span>
         </div>
       </div>
 
@@ -140,7 +152,7 @@ const Hit = ({ hit, store }) => {
 
             return (
               <React.Fragment>
-                <div className="hit__reviews__close" onClick={() => setOpen(false)}>✕</div>
+                {!showExtended && <div className="hit__reviews__close" onClick={() => setOpen(false)}>✕</div>}
                 <div className="hit__reviews__left">
                   <div className="hit__reviews__input">
                     <input className="ais-SearchBox-input" type="text" placeholder="Filter reviews..." value={reviewFilter} onChange={e => setReviewFilter(e.target.value)} />
@@ -169,7 +181,7 @@ const Hit = ({ hit, store }) => {
             );
           })()
         : hit.numReviews ?
-          <div className="hit__reviews__trigger">Expand for {hit.numReviews} recent student review{hit.numReviews === 1 ? '' : 's'}</div>
+          <div className="hit__reviews__trigger">Expand for {hit.numReviews} recent student review{hit.numReviews === 1 ? '' : 's'} + detailed stats</div>
         :
           <div className="hit__reviews__trigger disabled">No reviews available</div>
         }

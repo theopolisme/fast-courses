@@ -9,7 +9,9 @@ import App from './App';
 
 const debug = process.env.NODE_ENV === 'development';
 
-Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
+if (!debug) {
+  Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
+}
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID, {
   debug

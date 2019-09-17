@@ -12,15 +12,18 @@ import {
 } from 'react-instantsearch-dom';
 import qs from 'qs';
 import ReactGA from 'react-ga';
-
-import IconButton from './partials/IconButton';
-import Hits from './partials/Hits';
-import RightPanel from './partials/RightPanel';
-import ReactSidebar from "react-sidebar";
+import ReactSidebar from 'react-sidebar';
+import { Link, Route } from 'react-router-dom';
 
 import { useAuth } from './auth';
 import { searchClient, useStore } from './store';
 import * as util from './util';
+
+import Planner from './screens/Planner';
+
+import IconButton from './partials/IconButton';
+import Hits from './partials/Hits';
+import RightPanel from './partials/RightPanel';
 
 import 'instantsearch.css/themes/algolia.css';
 import './App.css';
@@ -49,7 +52,11 @@ const Header = React.forwardRef(({ user, onTitleClick, ...rest }, ref) => (
     <p className="header-subtitle">
       a better way to search Stanford courses* <span className="mobile-note"></span>
     </p>
-    <p className="header-user">{user.name}</p>
+    <p className="header-actions">
+      <Link to="/planner">planner <span className="header-actions__label">beta</span></Link>
+      <span className="header-actions__spacer" />
+      <span className="header-user">{user.name}</span>
+    </p>
   </header>
 ));
 
@@ -65,7 +72,8 @@ const Welcome = ({ show, onDismiss }) => (
             <li>Search above by course number, title, description, etc.</li>
             <li>Filter and sort by term, Ways, and more using the lefthand sidebar</li>
             <li>Click "Expand for recent student reviews" at the bottom of any result to read what other Stanford students have to say about it</li>
-            <li>Pin classes to your schedule by clicking the ☆ next to the time</li>
+            <li>Pin classes to this year's schedule by clicking the ☆ next to the time</li>
+            <li>Plan classes for future years (on desktop) by clicking <span className="plan-button-example">plan</span> at the bottom right</li>
           </ol>
 
           This is an evolving project &ndash; please send feedback and feature requests!
@@ -308,6 +316,7 @@ const App = ({ location, history }) => {
       onSearchStateChange={onSearchStateChange}
       createURL={createURL}
     >
+      <Route path={`/planner`} render={props => <Planner {...props} store={store} />} />
       {body}
     </InstantSearch>
   );

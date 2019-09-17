@@ -1,32 +1,18 @@
 import React, { useState } from 'react';
-import WeekCalendar from './WeekCalendar';
 import {
   Panel,
 } from 'react-instantsearch-dom';
 import ReactTooltip from 'react-tooltip'
 
+import WeekCalendar from './WeekCalendar';
 import IconButton from './IconButton';
 
 import * as util from '../util';
+import { CURRENT_TERMS } from '../config';
 
 import ColorHash from 'color-hash';
 
 const colorHash = new ColorHash();
-
-const CURRENT_TERMS = [
-  {
-    termId: '1202',
-    term: '2019-2020 Autumn'
-  },
-  {
-    termId: '1204',
-    term: '2019-2020 Winter'
-  },
-  {
-    termId: '1206',
-    term: '2019-2020 Spring'
-  },
-]
 
 const makeDate = offset => `2019-01-${13 + offset}`;
 const makeTime = seconds => {
@@ -79,7 +65,7 @@ const TermView = ({ term, classData, updateSearchState, setOpenTerm }) => {
     <Panel header={
       <span className="term_header">
         {term.term}
-        {/* &nbsp;<IconButton icon="zoom_in" onClick={() => setOpenTerm(term.termId)} />&nbsp; */}
+        {/* &nbsp;<IconButton icon="edit" onClick={() => setOpenTerm(term.termId)} />&nbsp; */}
         <span className="term_header__units" data-tip={unitsSummary}>{totalUnits} units</span>
       </span>
     }>
