@@ -249,7 +249,7 @@ const App = ({ location, history }) => {
 
   const PageRightPanel = (
     <SidebarContainer className="search-panel__right">
-      <RightPanel updateSearchState={onSearchStateChange} getClassesForTerm={store.getClassesForTerm} />
+      <RightPanel history={history} getClassesForTerm={store.getClassesForTerm} />
     </SidebarContainer>
   );
 

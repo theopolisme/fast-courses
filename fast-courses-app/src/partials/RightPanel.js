@@ -3,6 +3,7 @@ import {
   Panel,
 } from 'react-instantsearch-dom';
 import ReactTooltip from 'react-tooltip'
+import { Link } from 'react-router-dom';
 
 import WeekCalendar from './WeekCalendar';
 import IconButton from './IconButton';
@@ -21,10 +22,11 @@ const makeTime = seconds => {
   const minutes = Math.floor(totalMinutes % 60).toFixed();
   return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
 };
+const makeCourseLink = c => `/courses/${c.number.replace(/[^a-z0-9]/i, '')}/${c.objectID}`;
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const TermView = ({ term, classData, updateSearchState, setOpenTerm }) => {
+const TermView = ({ term, classData, history, setOpenTerm }) => {
   let minTime, maxTime;
 
   const { classes, courses, indexedCourses } = classData;
@@ -45,7 +47,7 @@ const TermView = ({ term, classData, updateSearchState, setOpenTerm }) => {
           start: `${date}T${start}`,
           end: `${date}T${end}`,
           color: colorHash.hex(c.number),
-          url: `?query=${c.number}`,
+          url: makeCourseLink(c),
           extendedProps: c
         });
       });
@@ -74,22 +76,16 @@ const TermView = ({ term, classData, updateSearchState, setOpenTerm }) => {
         minTime={minTime}
         maxTime={maxTime}
         onClick={course => {
-          updateSearchState({ query: course.number });
+          history.push(makeCourseLink(course));
         }}
       />
       {invisibleCourses.length ?
         <div className="term__invisible">
           Not yet scheduled:
           {' '}{util.intersperse(invisibleCourses.map(c => (
-            <a
-              href={`?query=${c.number}`}
-              onClick={e => {
-                if (!e.metaKey) {
-                  e.preventDefault();
-                  updateSearchState({ query: c.number })
-                }
-              }}
-            >{c.number}</a>
+            <Link
+              to={makeCourseLink(c)}
+            >{c.number}</Link>
           )), ', ')}
         </div>
       : null}
@@ -97,7 +93,7 @@ const TermView = ({ term, classData, updateSearchState, setOpenTerm }) => {
   );
 }
 
-const RightPanel = ({ updateSearchState, getClassesForTerm, ...rest }) => {
+const RightPanel = ({ history, getClassesForTerm, ...rest }) => {
   const [openTerm, setOpenTerm] = useState(null);
 
   return (
@@ -107,7 +103,7 @@ const RightPanel = ({ updateSearchState, getClassesForTerm, ...rest }) => {
           key={t.termId}
           term={t}
           classData={getClassesForTerm(t.termId)}
-          updateSearchState={updateSearchState}
+          history={history}
           setOpenTerm={setOpenTerm}
         />
       ))}
