@@ -46,6 +46,7 @@ const persistUpdate = ({ field, op, value }) => {
 export const useStore = ({ user }) => {
   const [appData, setAppData] = useState({ planner_start_year: CURRENT_YEAR.year, classes: [], planner: {}, planner_settings: {} });
   const [extendedData, setExtendedData] = useState({});
+  const [courseLoadSentinel, setCourseLoadSentinel] = useState(null);
 
   // On initial load, fetch courses for user
   useEffect(() => {
@@ -85,6 +86,29 @@ export const useStore = ({ user }) => {
 
   const generated = {
     appData,
+
+    getCourse: id => {
+      if (courseCache[id]) {
+        return courseCache[id];
+      } else {
+        searchIndex.search({
+          query: '',
+          filters: `objectID:${id}`,
+          hitsPerPage: 1,
+        }, (err, res) => {
+          if (err) {
+            window.alert(`Unable to load course: ${err.message}`);
+            return;
+          }
+
+          if (res.hits.length) {
+            courseCache[res.hits[0].objectID] = res.hits[0];
+            setCourseLoadSentinel(res.hits[0]); // fire an update
+          }
+        });
+        return { loading: true };
+      }
+    },
 
     // Classes / Scheduler
     hasClass: id => {

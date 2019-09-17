@@ -20,6 +20,7 @@ import { searchClient, useStore } from './store';
 import * as util from './util';
 
 import Planner from './screens/Planner';
+import HitOverlay from './screens/HitOverlay';
 
 import IconButton from './partials/IconButton';
 import Hits from './partials/Hits';
@@ -317,6 +318,7 @@ const App = ({ location, history }) => {
       createURL={createURL}
     >
       <Route path={`/planner`} render={props => <Planner {...props} store={store} />} />
+      <Route path={`/courses/:slug?/:courseId`} render={props => <HitOverlay {...props} showExtended={true} store={store} />} />
       {body}
     </InstantSearch>
   );

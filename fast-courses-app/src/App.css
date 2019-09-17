@@ -38,6 +38,7 @@
   max-width: 960px;
   margin: 0 auto;
   outline: none;
+  width: 90%;
   max-height: 100vh;
   overflow: scroll;
 }
@@ -181,6 +182,7 @@ body.scrolled .sticky {
   margin: 1rem 0;
   border-radius: 3px;
   background-color: #fff;
+  position: relative;
 }
 
 .hit__welcome {
@@ -201,6 +203,32 @@ body.scrolled .sticky {
 .hit__header {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.hit__header__text {
+  flex: 1;
+}
+
+.hit__header__open {
+  cursor: pointer;
+  opacity: 0;
+  margin-left: 1rem;
+}
+
+.hit:hover .hit__header__open {
+  opacity: 1;
+}
+
+.hit__header__open .icon-button {
+  padding: 0;
+}
+
+.hit__header__open svg {
+  width: 20px;
+  height: 20px;
+  fill: #7b60ed;
 }
 
 .hit__header__number {

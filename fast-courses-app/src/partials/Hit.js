@@ -5,10 +5,11 @@ import qs from 'qs';
 import * as util from '../util';
 import { authenticate } from '../auth';
 
+import IconButton from './IconButton';
 import Histogram from './Histogram';
 import Score from './Score';
 
-const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onViewInPlannerClick }) => {
+const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onViewInPlannerClick, fromOverlay, onClose }) => {
   const { hasClass, addClass, removeClass, getExtendedData } = store;
   const [open, setOpen] = useState(!!showExtended);
   const [reviewFilter, setReviewFilter] = useState('');
@@ -25,12 +26,18 @@ const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onVie
 
   const data = open ? getExtendedData(hit.objectID) : {};
 
+  const courseLink = `/courses/${hit.number.replace(/[^a-z0-9]/i, '')}/${hit.objectID}`;
+
   return (
     <div className="hit">
       <div className="hit__header">
-        <span className="hit__header__number">{hit.number}</span>{': '}
-        {hit.title}{' '}
-        <Score score={hit.currentScore} count={hit.currentScoreCount} latest />
+        {fromOverlay && <div className="hit__reviews__close" onClick={onClose}>✕</div>}
+        <span className="hit__header__text">
+          <span className="hit__header__number">{hit.number}</span>{': '}
+          {hit.title}{' '}
+          <Score score={hit.currentScore} count={hit.currentScoreCount} latest />
+        </span>
+        {!fromOverlay && <Link to={courseLink} className="hit__header__open"><IconButton icon="open_in_new" /></Link>}
       </div>
       <div className="hit__body">
         {hit.description}
