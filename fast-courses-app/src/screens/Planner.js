@@ -39,7 +39,6 @@ const PlannerItem = ({ term, course, index, settings, store }) => {
   const { termId, yearLabel } = term;
   const [overlayShown, setShowOverlay] = useState(false);
   const subjectColor = colorHash.hex(course.subject);
-  console.log('render', course);
 
   return (
     <React.Fragment>
