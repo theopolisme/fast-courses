@@ -21,6 +21,8 @@ import * as util from './util';
 
 import Planner from './screens/Planner';
 import HitOverlay from './screens/HitOverlay';
+import Terms from './screens/Terms';
+import Privacy from './screens/Privacy';
 
 import IconButton from './partials/IconButton';
 import Hits from './partials/Hits';
@@ -282,9 +284,12 @@ const App = ({ location, history }) => {
 
           <div className="attribution">
             <div>
-              <a className="ais-Menu-link" href="https://github.com/theopolisme/fast-courses">open source</a>
-              {' '}&middot;{' '}
-              <a className="ais-Menu-link" href="mailto:tcp@stanford.edu">questions?</a>
+              {util.intersperse([
+                <a className="ais-Menu-link" href="https://github.com/theopolisme/fast-courses" target="_blank">open source</a>,
+                <Link className="ais-Menu-link" to="/terms">terms</Link>,
+                <Link className="ais-Menu-link" to="/privacy">privacy</Link>,
+                <a className="ais-Menu-link" href="mailto:tcp@stanford.edu">questions?</a>
+              ], <React.Fragment>{' '}&middot;{' '}</React.Fragment>)}
             </div>
             <div>* not affiliated with Stanford University</div>
           </div>
@@ -319,6 +324,8 @@ const App = ({ location, history }) => {
     >
       <Route path={`/planner`} render={props => <Planner {...props} store={store} />} />
       <Route path={`/courses/:slug?/:courseId`} render={props => <HitOverlay {...props} showExtended={true} store={store} />} />
+      <Route path={`/terms`} render={props => <Terms {...props} />} />
+      <Route path={`/privacy`} render={props => <Privacy {...props} />} />
       {body}
     </InstantSearch>
   );
