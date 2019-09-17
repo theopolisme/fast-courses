@@ -190,6 +190,8 @@ export const useStore = ({ user }) => {
     },
     movePlannerCourse: ({ startTermId, startIndex, destinationTermId, destinationIndex, courseId }) => {
       let { planner } = appData;
+
+      if (!planner[startTermId]) { planner[startTermId] = []; }
       planner[startTermId] = planner[startTermId].filter(c => c !== courseId);
 
       if (!planner[destinationTermId]) { planner[destinationTermId] = []; }
