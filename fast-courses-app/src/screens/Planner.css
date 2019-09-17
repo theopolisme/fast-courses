@@ -187,7 +187,7 @@
   font-size: 0.8rem;
 }
 
-.aa-suggestion:hover {
+.aa-suggestion:hover, .aa-suggestion.selected {
   color: #fff;
   background-color: #bb8ff1;
 }
