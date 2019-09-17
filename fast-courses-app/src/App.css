@@ -39,7 +39,7 @@
   margin: 0 auto;
   outline: none;
   width: 90%;
-  max-height: 100vh;
+  max-height: 100%;
   overflow: scroll;
 }
 
