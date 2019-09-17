@@ -73,7 +73,7 @@ const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onVie
                           rel="noopener noreferrer"
                           target="_blank"
                           onClick={e => e.stopPropagation()}
-                          href={`?${qs.stringify(target)}`}
+                          href={`/?${qs.stringify(target)}`}
                         >{i.name}</a>
                       );
                     }), '; ')}
