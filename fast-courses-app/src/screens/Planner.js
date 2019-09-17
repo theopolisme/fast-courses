@@ -52,9 +52,8 @@ const PlannerItem = ({ term, course, index, settings, store }) => {
             {...provided.dragHandleProps}
             style={{ borderLeftColor: subjectColor, ...provided.draggableProps.style }}
             onClick={e => {
-              if (e.target.classList.contains('action')) {
-                ReactTooltip.hide();
-              } else {
+              ReactTooltip.hide();
+              if (!e.target.classList.contains('action')) {
                 setShowOverlay(true);
               }
             }}
