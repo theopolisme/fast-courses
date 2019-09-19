@@ -258,7 +258,7 @@ const App = ({ location, history }) => {
   const PageContent = (
     <div>
       <style>{"#loader { display: none; }"}</style>
-      <Header ref={ref} user={user} onTitleClick={() => onSearchStateChange({})} />
+      <Header ref={ref} user={user} onTitleClick={() => { history.push('/'); onSearchStateChange({}) }} />
       <div className="search-panel">
         {!isMobile && PageLeftPanel}
         <div className="search-panel__results">
@@ -323,7 +323,7 @@ const App = ({ location, history }) => {
       createURL={createURL}
     >
       <Route path={`/planner`} render={props => <Planner {...props} store={store} />} />
-      <Route path={`/courses/:slug?/:courseId`} render={props => <HitOverlay {...props} showExtended={true} store={store} />} />
+      <Route path={`/courses/:slug/:courseId?`} render={props => <HitOverlay {...props} showExtended={true} store={store} />} />
       <Route path={`/terms`} render={props => <Terms {...props} />} />
       <Route path={`/privacy`} render={props => <Privacy {...props} />} />
       {body}

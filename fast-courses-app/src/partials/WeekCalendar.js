@@ -29,6 +29,7 @@ const Calendar = ({ history, events, minTime, maxTime, onClick }) => {
           if (!info.jsEvent.metaKey) {
             info.jsEvent.preventDefault();
             onClick(info.event.extendedProps);
+            ReactTooltip.hide();
           }
         }}
         eventRender={({ event, el }) => {

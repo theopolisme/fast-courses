@@ -191,6 +191,18 @@ body.scrolled .sticky {
   background-image: linear-gradient(to right, #8e43e7, #00aeff);
 }
 
+.hit__error {
+  padding: 1rem 4rem 1rem 1rem;
+  display: block;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.hit__error .hit__reviews__close {
+  top: calc(50% - 9px);
+  right: 1rem;
+}
+
 .hit__welcome .hit__body {
   color: #fff;
   font-size: 1rem;
@@ -242,10 +254,24 @@ body.scrolled .sticky {
   word-wrap: break-word;
 }
 
+a.hit__body__courselink {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.hit__body__courselink:hover {
+  text-decoration: underline;
+}
+
 .hit__meta, .hit__schedule {
   margin-top: 0.75rem;
   font-size: 0.85rem;
   color: #929292;
+}
+
+.hit__schedule__wrongyear {
+  margin-bottom: 0.75rem;
+  font-weight: bold;
 }
 
 .hit__schedule__entry {

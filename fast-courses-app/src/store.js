@@ -87,25 +87,52 @@ export const useStore = ({ user }) => {
   const generated = {
     appData,
 
-    getCourse: id => {
-      if (courseCache[id]) {
-        return courseCache[id];
+    getCourse: (course) => {
+      let cached = courseCache[course.id] || courseCache[course.slugName];
+      if (cached) {
+        return cached;
       } else {
+        let searchQuery;
+
+        if (course.id) {
+          searchQuery = { filters: `objectID:${course.id}` };
+        } else {
+          let match = /\d/.exec(course.slugName);
+          if (match) {
+            searchQuery = { query: `${course.slugName.substring(0, match.index).trim().toUpperCase()} ${course.slugName.substring(match.index)}` };
+          }
+        }
+
+        const setCacheEntry = hit => {
+          let id = course.id || hit.objectID;
+          if (id) { courseCache[id] = hit; }
+          if (course.slugName) { courseCache[course.slugName] = hit; }
+          setCourseLoadSentinel(hit); // fire an update
+        }
+
+        if (!searchQuery) {
+          const error = { error: `Unable to load course: Invalid course "${course.slugName}"` };
+          setCacheEntry(error);
+          return error;
+        }
+
         searchIndex.search({
-          query: '',
-          filters: `objectID:${id}`,
+          ...searchQuery,
           hitsPerPage: 1,
         }, (err, res) => {
           if (err) {
-            window.alert(`Unable to load course: ${err.message}`);
+            setCacheEntry({ error: `Unable to load course: ${err.message}` });
             return;
           }
 
           if (res.hits.length) {
-            courseCache[res.hits[0].objectID] = res.hits[0];
-            setCourseLoadSentinel(res.hits[0]); // fire an update
+            setCacheEntry(res.hits[0]);
+          } else {
+            setCacheEntry({ error: `Course not found: ${course.slugName || course.id}` });
           }
         });
+
+        setCacheEntry({ loading: true });
         return { loading: true };
       }
     },

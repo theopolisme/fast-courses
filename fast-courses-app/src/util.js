@@ -1,4 +1,9 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
+import replace from 'string-replace-to-array';
+
+import { COURSE_REGEX } from './config';
+
+export const makeCourseLink = c => `/courses/${c.number.replace(/[^a-z0-9]/i, '')}/${c.objectID}`;
 
 export function formatDays(days) {
   return days.replace(/\w+/g, w => {
@@ -102,6 +107,10 @@ export function getColorForScore(score) {
 
 export function makeUnitsString(hit) {
   return `${hit.unitsMin === hit.unitsMax ? hit.unitsMin : `${hit.unitsMin}-${hit.unitsMax}`} ${hit.unitsMax !== '1' ? 'units' : 'unit'}`;
+}
+
+export function formatCourseDescription(raw, nameFormatter) {
+  return replace(raw, COURSE_REGEX, nameFormatter);
 }
 
 export function useMedia(queries, values, defaultValue) {

@@ -27,7 +27,8 @@
     "react-scripts": "3.0.0",
     "react-sidebar": "^3.0.2",
     "react-tooltip": "^3.10.0",
-    "rheostat": "2"
+    "rheostat": "2",
+    "string-replace-to-array": "^1.0.3"
   },
   "devDependencies": {
     "eslint-config-algolia": "13.2.3",

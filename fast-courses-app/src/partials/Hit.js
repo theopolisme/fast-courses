@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import qs from 'qs';
 import * as util from '../util';
 import { authenticate } from '../auth';
+import { CURRENT_YEAR } from '../config';
 
 import IconButton from './IconButton';
 import Histogram from './Histogram';
@@ -26,7 +27,7 @@ const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onVie
 
   const data = open ? getExtendedData(hit.objectID) : {};
 
-  const courseLink = `/courses/${hit.number.replace(/[^a-z0-9]/i, '')}/${hit.objectID}`;
+  const courseLink = util.makeCourseLink(hit);
 
   return (
     <div className="hit">
@@ -40,7 +41,11 @@ const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onVie
         {!fromOverlay && <Link to={courseLink} className="hit__header__open"><IconButton icon="open_in_new" /></Link>}
       </div>
       <div className="hit__body">
-        {hit.description}
+        {util.formatCourseDescription(hit.description, (match, subject, number) => {
+          return (
+            <Link className="hit__body__courselink" to={`/courses/${`${subject}${number}`.toUpperCase()}`}>{match}</Link>
+          );
+        })}
       </div>
 
       <div className="hit__schedule">

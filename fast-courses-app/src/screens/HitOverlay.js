@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import Hit from '../partials/Hit';
 
@@ -7,21 +7,29 @@ import { useLockBodyScroll } from '../util';
 export default ({ onClose, ...props }) => {
   useLockBodyScroll();
 
+  let fetchCourse;
   if (props.match && props.match.params.courseId) {
-    const id = props.match.params.courseId.split('-');
-    props.fetchCourseId = id[id.length - 1];
+    fetchCourse = { id: props.match.params.courseId };
+  } else if (props.match && props.match.params.slug) {
+    fetchCourse = { slugName: props.match.params.slug };
   }
 
   if (!onClose && props.history) {
     onClose = () => props.history.push('/');
   }
 
-  if (props.fetchCourseId) {
-    const hit = props.store.getCourse(props.fetchCourseId);
+  if (fetchCourse) {
+    const hit = props.store.getCourse(fetchCourse);
     if (!hit.loading) {
       props.hit = hit;
     }
   }
+
+  useEffect(() => {
+    if (props.match && !props.match.params.courseId && props.hit && props.hit.objectID) {
+      props.history.replace(`/courses/${props.match.params.slug}/${props.hit.objectID}`);
+    }
+  }, [props.match, props.hit]);
 
   if (!props.hit) { return <div />; }
 
@@ -32,7 +40,14 @@ export default ({ onClose, ...props }) => {
       overlayClassName="modal__overlay modal__basic__overlay"
       onRequestClose={onClose}
     >
-      <Hit fromOverlay={true} onViewInPlannerClick={!props.fetchCourseId && onClose} onClose={onClose} {...props} />
+      {props.hit.error ?
+        <div className="hit hit__error">
+          <div className="hit__reviews__close" onClick={onClose}>✕</div>
+          {props.hit.error}
+        </div>
+      :
+        <Hit fromOverlay={true} onViewInPlannerClick={!fetchCourse && onClose} onClose={onClose} {...props} />
+      }
     </Modal>
   );
 }

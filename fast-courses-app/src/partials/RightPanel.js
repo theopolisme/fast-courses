@@ -22,7 +22,6 @@ const makeTime = seconds => {
   const minutes = Math.floor(totalMinutes % 60).toFixed();
   return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
 };
-const makeCourseLink = c => `/courses/${c.number.replace(/[^a-z0-9]/i, '')}/${c.objectID}`;
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -47,7 +46,7 @@ const TermView = ({ term, classData, history, setOpenTerm }) => {
           start: `${date}T${start}`,
           end: `${date}T${end}`,
           color: colorHash.hex(c.number),
-          url: makeCourseLink(c),
+          url: util.makeCourseLink(c),
           extendedProps: c
         });
       });
@@ -76,7 +75,7 @@ const TermView = ({ term, classData, history, setOpenTerm }) => {
         minTime={minTime}
         maxTime={maxTime}
         onClick={course => {
-          history.push(makeCourseLink(course));
+          history.push(util.makeCourseLink(course));
         }}
       />
       {invisibleCourses.length ?
@@ -84,7 +83,7 @@ const TermView = ({ term, classData, history, setOpenTerm }) => {
           Not yet scheduled:
           {' '}{util.intersperse(invisibleCourses.map(c => (
             <Link
-              to={makeCourseLink(c)}
+              to={util.makeCourseLink(c)}
             >{c.number}</Link>
           )), ', ')}
         </div>
