@@ -102,6 +102,7 @@ const PlannerItem = ({ term, course, index, settings, store }) => {
           store={store}
           onClose={() => setShowOverlay(false)}
           showExtended
+          planTerm={term}
           hideSchedule={termId !== 'staging' && yearLabel !== CURRENT_YEAR.yearLabel}
           hiddenScheduleYear={yearLabel}
         />

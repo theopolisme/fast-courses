@@ -207,12 +207,13 @@ export const useStore = ({ user }) => {
     },
     getPlannerCoursesForTerm: (termId) => {
       const data = appData.planner[termId] || [];
-      let courses = data.map(c => courseCache[c]);
+      let courses = data.map(c => courseCache[c] ? { ...courseCache[c], starred: false } : undefined);
 
       if (appData.planner_settings.show_starred) {
         const starred = appData.classes.map(c => cache[c]).filter(c => c && c.termId === termId).map(c => c.objectID);
+        console.log(starred, courses);
         for (let objectID of starred) {
-          let i = courses.findIndex(c => c.objectID === objectID);
+          let i = courses.findIndex(c => c && c.objectID === objectID);
           if (i === -1) {
             courses.push({ ...courseCache[objectID], starred: true });
           } else {
@@ -257,6 +258,9 @@ export const useStore = ({ user }) => {
     },
     plannerHasCourse: (courseId) => {
       return Object.values(appData.planner).some(p => p.indexOf(courseId) !== -1);
+    },
+    plannerTermHasCourse: (termId, courseId) => {
+      return appData.planner[termId] && appData.planner[termId].indexOf(courseId) !== -1;
     },
 
     getPlannerSettings: () => {

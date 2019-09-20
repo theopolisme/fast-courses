@@ -20,18 +20,21 @@ export const makeTerms = (year, { includeSummer, extended }) => {
         termId: (firstTermId).toString(),
         term: `${yearLabel} Autumn`,
         label: 'Autumn',
+        shortLabel: `Autumn ${year}`,
         yearLabel,
       },
       {
         termId: (firstTermId + 2).toString(),
         term: `${yearLabel} Winter`,
         label: 'Winter',
+        shortLabel: `Winter ${year + 1}`,
         yearLabel,
       },
       {
         termId: (firstTermId + 4).toString(),
         term: `${yearLabel} Spring`,
         label: 'Spring',
+        shortLabel: `Spring ${year + 1}`,
         yearLabel,
       },
     ].concat(includeSummer ? [
@@ -39,6 +42,7 @@ export const makeTerms = (year, { includeSummer, extended }) => {
         termId: (firstTermId + 6).toString(),
         term: `${yearLabel} Summer`,
         label: 'Summer',
+        shortLabel: `Summer ${year + 1}`,
         yearLabel,
         summer: true,
       }

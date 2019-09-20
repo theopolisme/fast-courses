@@ -10,7 +10,7 @@ import IconButton from './IconButton';
 import Histogram from './Histogram';
 import Score from './Score';
 
-const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onViewInPlannerClick, fromOverlay, onClose }) => {
+const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, planTerm, onViewInPlannerClick, fromOverlay, onClose }) => {
   const { hasClass, addClass, removeClass, getExtendedData } = store;
   const [open, setOpen] = useState(!!showExtended);
   const [reviewFilter, setReviewFilter] = useState('');
@@ -23,7 +23,8 @@ const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onVie
     sections = sections.filter(s => s.component === 'LEC');
   }
 
-  const isPlanned = store.plannerHasCourse(hit.objectID);
+  const isTermPlanned = planTerm && store.plannerTermHasCourse(hit.objectID);
+  const isPlanned = isTermPlanned || store.plannerHasCourse(hit.objectID);
 
   const data = open ? getExtendedData(hit.objectID) : {};
 
@@ -133,8 +134,8 @@ const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, onVie
             <Link
               className={`ais-Menu-link plan-button${isPlanned ? ' planned' : ''}`}
               to="/planner"
-              onClick={!isPlanned ? e => { e.preventDefault(); e.stopPropagation(); store.addPlannerCourse('staging', hit); } : (onViewInPlannerClick || undefined)}
-            >{isPlanned ? 'show in planner': 'plan'}</Link>
+              onClick={!isPlanned ? e => { e.preventDefault(); e.stopPropagation(); store.addPlannerCourse(planTerm ? planTerm.termId : 'staging', hit); } : (onViewInPlannerClick || undefined)}
+            >{isPlanned ? `show in planner` : `plan${planTerm ? ` for ${planTerm.shortLabel}` : ''}`}</Link>
           </span>
         </div>
       </div>
