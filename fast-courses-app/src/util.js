@@ -110,7 +110,7 @@ export function makeUnitsString(hit) {
 }
 
 export function formatCourseDescription(raw, nameFormatter) {
-  return replace(raw, COURSE_REGEX, nameFormatter);
+  return replace(raw || '', COURSE_REGEX, nameFormatter);
 }
 
 export function useMedia(queries, values, defaultValue) {
