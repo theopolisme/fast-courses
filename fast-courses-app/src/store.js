@@ -40,7 +40,11 @@ const persistUpdate = ({ field, op, value }) => {
     }),
     headers: { 'content-type': 'application/json' }
   })
-  .then(r => r.json());
+  .then(r => r.json())
+  .catch(e => {
+    console.error(e);
+    window.alert(`Failed to save changes. Are you offline, or perhaps did your Stanford authentication token expire? Please refresh and try again, sorry :-(`);
+  });
 }
 
 export const useStore = ({ user }) => {
@@ -50,13 +54,20 @@ export const useStore = ({ user }) => {
 
   // On initial load, fetch courses for user
   useEffect(() => {
-    if (user && user.classes && user.classes.length && !HAS_INITIAL_FETCHED) {
+    if (!user) {
+      return;
+    }
+
+    const classes = user.classes;
+    const plannedCourses = Object.values(user.planner).reduce((c, t) => c.concat(t), []);
+
+    if ((classes.length || plannedCourses.length) && !HAS_INITIAL_FETCHED) {
       HAS_INITIAL_FETCHED = true;
 
       const filters = user.classes.map(c => {
         const classId = c.split('|')[1];
         return `sections.classId:${classId}`;
-      }).concat(Object.values(user.planner).reduce((c, t) => c.concat(t), []).map(c => {
+      }).concat(plannedCourses.map(c => {
         return `objectID:${c}`
       })).join(' OR ');
 
@@ -211,7 +222,6 @@ export const useStore = ({ user }) => {
 
       if (appData.planner_settings.show_starred) {
         const starred = appData.classes.map(c => cache[c]).filter(c => c && c.termId === termId).map(c => c.objectID);
-        console.log(starred, courses);
         for (let objectID of starred) {
           let i = courses.findIndex(c => c && c.objectID === objectID);
           if (i === -1) {
