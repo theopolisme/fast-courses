@@ -73,7 +73,8 @@ def parse_courses_xml(doc):
             for section in course['sections'][:MAX_SECTIONS]:
 
                 PLUCK_SECTION_KEYS = ('term', 'termId', 'sectionNumber',
-                                      'component', 'notes', 'classId')
+                                      'component', 'notes', 'classId',
+                                      'currentClassSize', 'maxClassSize')
                 gen_section = {k: section[k] for k in PLUCK_SECTION_KEYS}
                 gen_section['schedules'] = []
 

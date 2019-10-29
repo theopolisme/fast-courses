@@ -50,8 +50,11 @@ def process_file(name, f, index, counts, ratings):
                     c['sections'] = [s for s in c['sections']
                                      if s['component'] == 'LEC']
 
-            # Reduce size
+            # Normalize / reduce size
             for section in c['sections']:
+                del section['notes']
+                section['currentClassSize'] = int(section['currentClassSize'])
+                section['maxClassSize'] = int(section['maxClassSize'])
                 for schedule in section['schedules']:
                     del schedule['startTime']
                     del schedule['endTime']
