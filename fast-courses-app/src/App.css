@@ -176,6 +176,15 @@ body.scrolled .sticky {
   margin-top: 1rem;
 }
 
+.ais-Panel-header .term_header {
+  cursor: pointer;
+}
+
+.ais-Panel.collapsed {
+  max-height: 1rem;
+  overflow: hidden;
+}
+
 .hit {
   box-shadow: 0 0 5px 0px rgba(140, 70, 231, 0.25);
   padding: 1.5rem 1.5rem 1rem;

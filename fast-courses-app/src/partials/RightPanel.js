@@ -26,6 +26,8 @@ const makeTime = seconds => {
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const TermView = ({ term, classData, history, setOpenTerm }) => {
+  const [collapsed, setCollapsed] = useState(term.collapseAfter ? Date.now() > term.collapseAfter : false);
+
   let minTime, maxTime;
 
   const { classes, courses, indexedCourses } = classData;
@@ -63,13 +65,16 @@ const TermView = ({ term, classData, history, setOpenTerm }) => {
     : 'No classes yet';
 
   return (
-    <Panel header={
-      <span className="term_header">
-        {term.term}
-        {/* &nbsp;<IconButton icon="edit" onClick={() => setOpenTerm(term.termId)} />&nbsp; */}
-        <span className="term_header__units" data-tip={unitsSummary}>{totalUnits} units</span>
-      </span>
-    }>
+    <Panel
+      className={collapsed ? 'collapsed' : ''}
+      header={
+        <span className="term_header" onClick={() => setCollapsed(!collapsed)}>
+          {term.term}
+          {/* &nbsp;<IconButton icon="edit" onClick={() => setOpenTerm(term.termId)} />&nbsp; */}
+          <span className="term_header__units" data-tip={unitsSummary}>{totalUnits} units</span>
+        </span>
+      }
+    >
       <WeekCalendar
         events={events}
         minTime={minTime}
