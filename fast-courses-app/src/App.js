@@ -27,6 +27,7 @@ import Privacy from './screens/Privacy';
 import IconButton from './partials/IconButton';
 import Hits from './partials/Hits';
 import RightPanel from './partials/RightPanel';
+import CustomRangeSlider from './partials/CustomRangeSlider';
 
 import 'instantsearch.css/themes/algolia.css';
 import './App.css';
@@ -48,19 +49,37 @@ const Sticky = ({ className, children }) => {
 };
 
 const Header = React.forwardRef(({ user, onTitleClick, ...rest }, ref) => (
-  <header className="header" ref={ref} {...rest}>
-    <h1 className="header-title">
-      <a href="/" onClick={e => { if (!e.metaKey) { e.preventDefault(); onTitleClick(); } }}>fast-courses<span>▸</span></a>
-    </h1>
-    <p className="header-subtitle">
-      a better way to search Stanford courses* <span className="mobile-note"></span>
-    </p>
-    <p className="header-actions">
-      <Link to="/planner">planner <span className="header-actions__label">beta</span></Link>
-      <span className="header-actions__spacer" />
-      <span className="header-user">{user.name}</span>
-    </p>
-  </header>
+  <>
+    <header className="header" ref={ref} {...rest}>
+      <h1 className="header-title">
+        <a
+          href="/"
+          onClick={(e) => {
+            if (!e.metaKey) {
+              e.preventDefault();
+              onTitleClick();
+            }
+          }}
+        >
+          fast-courses<span>▸</span>
+        </a>
+      </h1>
+      <p className="header-subtitle">
+        a better way to search Stanford courses*{' '}
+        <span className="mobile-note"></span>
+      </p>
+      <p className="header-actions">
+        <Link to="/planner">
+          planner <span className="header-actions__label">beta</span>
+        </Link>
+        <span className="header-actions__spacer" />
+        <span className="header-user">{user.name}</span>
+      </p>
+    </header>
+    <div className="callout">
+      Now updated for the 2020-2021 academic year! <i>Have you considered taking a gap year?</i>
+    </div>
+  </>
 ));
 
 const Welcome = ({ show, onDismiss }) => (
@@ -235,6 +254,26 @@ const App = ({ location, history }) => {
           />
         </Panel>
 
+        {false &&
+          <React.Fragment>
+            <Panel header="Max class size">
+              <RangeInput attribute="sections.maxClassSize" />
+            </Panel>
+
+            <Panel header="Current class size">
+              <RangeInput attribute="sections.currentClassSize" />
+            </Panel>
+
+            <Panel header="Start time">
+              <CustomRangeSlider
+                attribute="sections.schedules.startTimestamp"
+                min={0}
+                max={50000}
+              />
+            </Panel>
+          </React.Fragment>
+        }
+
         <Panel header="Sort By">
           <SortBy
             defaultRefinement="courses"
@@ -257,21 +296,40 @@ const App = ({ location, history }) => {
 
   const PageContent = (
     <div>
-      <style>{"#loader { display: none; }"}</style>
-      <Header ref={ref} user={user} onTitleClick={() => { history.push('/'); onSearchStateChange({}) }} />
+      <style>{'#loader { display: none; }'}</style>
+      <Header
+        ref={ref}
+        user={user}
+        onTitleClick={() => {
+          history.push('/');
+          onSearchStateChange({});
+        }}
+      />
       <div className="search-panel">
         {!isMobile && PageLeftPanel}
         <div className="search-panel__results">
           <div className="search-panel__query">
             <div className="search-panel__searchbox">
-              {isMobile && <IconButton icon="filter" onClick={() => setLeftOpen(true)} />}
+              {isMobile && (
+                <IconButton icon="filter" onClick={() => setLeftOpen(true)} />
+              )}
               <SearchBox
-                translations={{placeholder: "Search by course number, title, description, anything really..."}}
+                translations={{
+                  placeholder:
+                    'Search by course number, title, description, anything really...',
+                }}
                 showLoadingIndicator
               />
-              {isMobile && <IconButton icon="calendar" onClick={() => setRightOpen(true)} />}
+              {isMobile && (
+                <IconButton
+                  icon="calendar"
+                  onClick={() => setRightOpen(true)}
+                />
+              )}
             </div>
-            <div className="search-panel__stats"><Stats /></div>
+            <div className="search-panel__stats">
+              <Stats />
+            </div>
           </div>
 
           <Welcome show={showWelcome} onDismiss={onWelcomeDismiss} />
@@ -284,12 +342,28 @@ const App = ({ location, history }) => {
 
           <div className="attribution">
             <div>
-              {util.intersperse([
-                <a className="ais-Menu-link" href="https://github.com/theopolisme/fast-courses" target="_blank">open source</a>,
-                <Link className="ais-Menu-link" to="/terms">terms</Link>,
-                <Link className="ais-Menu-link" to="/privacy">privacy</Link>,
-                <a className="ais-Menu-link" href="mailto:tcp@stanford.edu">questions?</a>
-              ], <React.Fragment>{' '}&middot;{' '}</React.Fragment>)}
+              {util.intersperse(
+                [
+                  <a
+                    className="ais-Menu-link"
+                    href="https://github.com/theopolisme/fast-courses"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    open source
+                  </a>,
+                  <Link className="ais-Menu-link" to="/terms">
+                    terms
+                  </Link>,
+                  <Link className="ais-Menu-link" to="/privacy">
+                    privacy
+                  </Link>,
+                  <a className="ais-Menu-link" href="mailto:tcp@stanford.edu">
+                    questions?
+                  </a>,
+                ],
+                <React.Fragment> &middot; </React.Fragment>
+              )}
             </div>
             <div>* not affiliated with Stanford University</div>
           </div>
