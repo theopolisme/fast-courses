@@ -4,9 +4,9 @@ export const COURSE_REGEX = new RegExp(`(${SUBJECTS.join('|')})[ ]?(\\d+[a-z]*)`
 window.COURSE_REGEX = COURSE_REGEX;
 
 export const CURRENT_YEAR = {
-  firstTermId: 1202,
-  year: 2019,
-  yearLabel: '2019-2020'
+  firstTermId: 1212,
+  year: 2020,  
+  yearLabel: '2020-2021',
 };
 
 export const makeTerms = (year, { includeSummer, extended }) => {

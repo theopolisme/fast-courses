@@ -9,6 +9,7 @@ ENDPOINT: https://explorecourses.stanford.edu/
 
 ## Commands
 
+- `pipenv run python fetch.py -o raw`
 - `pipenv run python fetch.py -o raw -i raw/departments.json`
 - `pipenv run python parse.py -o out/ -p "raw/*.xml"`
 - `pipenv run python upload.py -p "out/*.json" -c ../evaluations/derived/counts.json -r ../evaluations/derived/ratings.json`
