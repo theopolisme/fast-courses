@@ -119,6 +119,16 @@
   font-weight: bold;
 }
 
+.callout {
+  padding: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  border-radius: 1em;
+  text-align: center;
+  background-color: #AD1457;
+  color: #fff;
+}
+
 .search-panel {
   width: 90vw;
   max-width: 1500px;

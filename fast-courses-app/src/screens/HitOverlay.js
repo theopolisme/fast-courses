@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Modal from 'react-modal';
 import Hit from '../partials/Hit';
 
@@ -26,10 +26,17 @@ export default ({ onClose, ...props }) => {
   }
 
   useEffect(() => {
-    if (props.match && !props.match.params.courseId && props.hit && props.hit.objectID) {
-      props.history.replace(`/courses/${props.match.params.slug}/${props.hit.objectID}`);
+    if (
+      props.match &&
+      !props.match.params.courseId &&
+      props.hit &&
+      props.hit.objectID
+    ) {
+      props.history.replace(
+        `/courses/${props.match.params.slug}/${props.hit.objectID}`
+      );
     }
-  }, [props.match, props.hit]);
+  }, [props.match, props.hit, props.history]);
 
   if (!props.hit) { return <div />; }
 

@@ -50,6 +50,7 @@ const persistUpdate = ({ field, op, value }) => {
 export const useStore = ({ user }) => {
   const [appData, setAppData] = useState({ planner_start_year: CURRENT_YEAR.year, classes: [], planner: {}, planner_settings: {} });
   const [extendedData, setExtendedData] = useState({});
+  // eslint-disable-next-line
   const [courseLoadSentinel, setCourseLoadSentinel] = useState(null);
 
   // On initial load, fetch courses for user

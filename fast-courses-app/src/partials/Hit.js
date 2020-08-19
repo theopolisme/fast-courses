@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import qs from 'qs';
 import * as util from '../util';
 import { authenticate } from '../auth';
-import { CURRENT_YEAR } from '../config';
 
 import IconButton from './IconButton';
 import Histogram from './Histogram';
@@ -153,7 +152,24 @@ const Hit = ({ hit, store, showExtended, hideSchedule, hiddenScheduleYear, planT
             } else if (data.error) {
               const needsReuath = data.error.message === 'Not authorized';
               return (
-                <div>Unable to load: {data.error.message || data.error}{needsReuath ? <React.Fragment> &ndash; <a href="#" onClick={e => { e.preventDefault(); authenticate(); }}>re-authenticate</a></React.Fragment> : null}</div>
+                <div>
+                  Unable to load: {data.error.message || data.error}
+                  {needsReuath ? (
+                    <React.Fragment>
+                      {' '}
+                      &ndash;{' '}
+                      <a
+                        href="#reauth"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          authenticate();
+                        }}
+                      >
+                        re-authenticate
+                      </a>
+                    </React.Fragment>
+                  ) : null}
+                </div>
               );
             } else if (!data.reviews || data.reviews.length === 0) {
               return (

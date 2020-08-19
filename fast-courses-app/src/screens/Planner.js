@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Autocomplete from 'algolia-react-autocomplete';

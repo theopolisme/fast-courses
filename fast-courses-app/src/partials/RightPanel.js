@@ -6,7 +6,6 @@ import ReactTooltip from 'react-tooltip'
 import { Link } from 'react-router-dom';
 
 import WeekCalendar from './WeekCalendar';
-import IconButton from './IconButton';
 
 import * as util from '../util';
 import { CURRENT_TERMS } from '../config';
@@ -25,7 +24,7 @@ const makeTime = seconds => {
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const TermView = ({ term, classData, history, setOpenTerm }) => {
+const TermView = ({ term, classData, history }) => {
   const [collapsed, setCollapsed] = useState(term.collapseAfter ? Date.now() > term.collapseAfter : false);
 
   let minTime, maxTime;
@@ -98,8 +97,6 @@ const TermView = ({ term, classData, history, setOpenTerm }) => {
 }
 
 const RightPanel = ({ history, getClassesForTerm, ...rest }) => {
-  const [openTerm, setOpenTerm] = useState(null);
-
   return (
     <div {...rest}>
       {CURRENT_TERMS.map(t => (
@@ -108,7 +105,6 @@ const RightPanel = ({ history, getClassesForTerm, ...rest }) => {
           term={t}
           classData={getClassesForTerm(t.termId)}
           history={history}
-          setOpenTerm={setOpenTerm}
         />
       ))}
       <ReactTooltip effect="solid" multiline={true} />
