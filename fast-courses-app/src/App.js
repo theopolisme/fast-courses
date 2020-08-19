@@ -76,9 +76,9 @@ const Header = React.forwardRef(({ user, onTitleClick, ...rest }, ref) => (
         <span className="header-user">{user.name}</span>
       </p>
     </header>
-    <div className="callout">
+    {/* <div className="callout">
       Now updated for the 2020-2021 academic year! <i>Have you considered taking a gap year?</i>
-    </div>
+    </div> */}
   </>
 ));
 
