@@ -40,7 +40,7 @@
   outline: none;
   width: 90%;
   max-height: 100%;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .modal__basic__overlay {
@@ -141,7 +141,7 @@ body.scrolled .sticky {
   position: sticky;
   top: 0;
   height: calc(100vh - 2rem);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .search-panel__results {
@@ -501,13 +501,13 @@ a.ais-Menu-link.plan-button.planned, a.ais-Menu-link.plan-button:hover {
 .hit__reviews__right {
   padding-top: 0.5rem;
   max-height: 195px;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 1;
 }
 
 .hit__reviews__list {
   max-height: 150px;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 0.33rem 0;
 }
 
