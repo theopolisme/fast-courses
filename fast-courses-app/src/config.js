@@ -63,4 +63,4 @@ export const makeTerms = (year, { includeSummer, extended }) => {
   };
 }
 
-export const CURRENT_TERMS = makeTerms(CURRENT_YEAR.year, { includeSummer: false });
+export const CURRENT_TERMS = makeTerms(CURRENT_YEAR.year, { includeSummer: true });
