@@ -5,7 +5,8 @@ import ReactGA from 'react-ga';
 import * as Sentry from '@sentry/browser';
 
 import './index.css';
-import App from './App';
+// import App from './App';
+import UnderConstruction from './UnderConstruction';
 
 const debug = process.env.NODE_ENV === 'development';
 
@@ -14,11 +15,11 @@ if (!debug) {
 }
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRACKING_ID, {
-  debug
+  debug,
 });
 
 // Header scroll
-window.addEventListener('scroll', e => {
+window.addEventListener('scroll', (e) => {
   if (window.scrollY >= 62) {
     document.body.classList.add('scrolled');
   } else {
@@ -28,7 +29,8 @@ window.addEventListener('scroll', e => {
 
 ReactDOM.render(
   <Router>
-    <Route path="/" component={App} />
+    <Route path="/" component={UnderConstruction} />
+    {/* <Route path="/" component={App} /> */}
   </Router>,
   document.getElementById('root')
 );
