@@ -5,8 +5,8 @@ import ReactGA from 'react-ga';
 import * as Sentry from '@sentry/browser';
 
 import './index.css';
-// import App from './App';
-import UnderConstruction from './UnderConstruction';
+import App from './App';
+// import UnderConstruction from './UnderConstruction';
 
 const debug = process.env.NODE_ENV === 'development';
 
@@ -29,8 +29,8 @@ window.addEventListener('scroll', (e) => {
 
 ReactDOM.render(
   <Router>
-    <Route path="/" component={UnderConstruction} />
-    {/* <Route path="/" component={App} /> */}
+    {/* <Route path="/" component={UnderConstruction} /> */}
+    <Route path="/" component={App} />
   </Router>,
   document.getElementById('root')
 );

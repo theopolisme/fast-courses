@@ -34,8 +34,10 @@ import './App.css';
 
 const DEBOUNCE_TIME = 400;
 
-const createURL = state => {
-  if (state.pages === 1) { delete state.pages; }
+const createURL = (state) => {
+  if (state.pages === 1) {
+    delete state.pages;
+  }
   return `?${qs.stringify(state)}`;
 };
 
@@ -76,47 +78,65 @@ const Header = React.forwardRef(({ user, onTitleClick, ...rest }, ref) => (
         <span className="header-user">{user.name}</span>
       </p>
     </header>
-    {/* <div className="callout">
-      Now updated for the 2020-2021 academic year! <i>Have you considered taking a gap year?</i>
-    </div> */}
+    <div className="callout">
+      Now updated for the 2021-22 academic year!{' '}
+      <i>
+        Want to help maintain fast-courses?{' '}
+        <a href="mailto:tcp@stanford.edu">Email me!</a>
+      </i>
+    </div>
   </>
 ));
 
-const Welcome = ({ show, onDismiss }) => (
-  show ?
+const Welcome = ({ show, onDismiss }) =>
+  show ? (
     <div className="hit hit__welcome">
-      <div className="hit__reviews__close" onClick={onDismiss}>✕</div>
+      <div className="hit__reviews__close" onClick={onDismiss}>
+        ✕
+      </div>
       <div className="hit__body">
         <div>
-          <strong>Welcome to a better way to discover Stanford courses.</strong> fast-courses is like ExploreCourses meets Carta... 1000x faster.
-
+          <strong>Welcome to a better way to discover Stanford courses.</strong>{' '}
+          fast-courses is like ExploreCourses meets Carta... 1000x faster.
           <ol>
             <li>Search above by course number, title, description, etc.</li>
-            <li>Filter and sort by term, Ways, and more using the lefthand sidebar</li>
-            <li>Click "Expand for recent student reviews" at the bottom of any result to read what other Stanford students have to say about it</li>
-            <li>Pin classes to this year's schedule by clicking the ☆ next to the time</li>
-            <li>Plan classes for future years (on desktop) by clicking <span className="plan-button-example">plan</span> at the bottom right</li>
+            <li>
+              Filter and sort by term, Ways, and more using the lefthand sidebar
+            </li>
+            <li>
+              Click "Expand for recent student reviews" at the bottom of any
+              result to read what other Stanford students have to say about it
+            </li>
+            <li>
+              Pin classes to this year's schedule by clicking the ☆ next to the
+              time
+            </li>
+            <li>
+              Plan classes for future years (on desktop) by clicking{' '}
+              <span className="plan-button-example">plan</span> at the bottom
+              right
+            </li>
           </ol>
-
-          This is an evolving project &ndash; please send feedback and feature requests!
+          This is an evolving project &ndash; please send feedback and feature
+          requests!
         </div>
       </div>
     </div>
-  :
-    null
-);
+  ) : null;
 
-const sortTerms = items => util.sortTerms(items, t => t.label);
-const sortScheduleDays = items =>
-  items.map(item => ({
+const sortTerms = (items) => util.sortTerms(items, (t) => t.label);
+const sortScheduleDays = (items) =>
+  items.map((item) => ({
     ...item,
     label: util.formatDays(item.label),
   }));
-const sortUnits = items => {
-  let res = items.sort((a,b) => +a.label - +b.label).map(item => ({
-    ...item,
-    label: `${item.label} unit${item.label === '1' ? '' : 's'}`
-  }));
+const sortUnits = (items) => {
+  let res = items
+    .sort((a, b) => +a.label - +b.label)
+    .map((item) => ({
+      ...item,
+      label: `${item.label} unit${item.label === '1' ? '' : 's'}`,
+    }));
   return res;
 };
 
@@ -130,8 +150,14 @@ const App = ({ location, history }) => {
   const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
 
-  const [hasVisited, setHasVisited] = util.useLocalStorage('fastcourses__hasvisited', false);
-  const [hasDismissedWelcome, setHasDismissedWelcome] = util.useLocalStorage('fastcourses__hasdismissedwelcome', false);
+  const [hasVisited, setHasVisited] = util.useLocalStorage(
+    'fastcourses__hasvisited',
+    false
+  );
+  const [hasDismissedWelcome, setHasDismissedWelcome] = util.useLocalStorage(
+    'fastcourses__hasdismissedwelcome',
+    false
+  );
   const [showWelcome, setShowWelcome] = useState(!hasDismissedWelcome);
 
   // Check if active query / filters applied
@@ -153,9 +179,13 @@ const App = ({ location, history }) => {
   const onSearchStateChange = (updatedSearchState, initial) => {
     // Handle scroll
     if (!initial && ref && ref.current) {
-      const top = ref.current.getBoundingClientRect().height + (isMobile ? 16 : 32);
+      const top =
+        ref.current.getBoundingClientRect().height + (isMobile ? 16 : 32);
       if (isMobile || window.scrollY >= top) {
-        (isMobile ? document.getElementById('appContent') : window).scrollTo(0, top);
+        (isMobile ? document.getElementById('appContent') : window).scrollTo(
+          0,
+          top
+        );
       }
     }
 
@@ -167,7 +197,10 @@ const App = ({ location, history }) => {
     clearTimeout(debouncedSetState);
     setDebouncedSetState(
       setTimeout(() => {
-        history.push(searchStateToUrl({ location }, updatedSearchState), updatedSearchState);
+        history.push(
+          searchStateToUrl({ location }, updatedSearchState),
+          updatedSearchState
+        );
       }, DEBOUNCE_TIME)
     );
 
@@ -202,19 +235,11 @@ const App = ({ location, history }) => {
         </Panel>
 
         <Panel header="WAYS / GERs">
-          <RefinementList
-            attribute="gers"
-            searchable
-            limit={5}
-          />
+          <RefinementList attribute="gers" searchable limit={5} />
         </Panel>
 
         <Panel header="Subject">
-          <RefinementList
-            attribute="subject"
-            searchable
-            limit={5}
-          />
+          <RefinementList attribute="subject" searchable limit={5} />
         </Panel>
 
         <Panel header="Instructor">
@@ -254,7 +279,7 @@ const App = ({ location, history }) => {
           />
         </Panel>
 
-        {false &&
+        {false && (
           <React.Fragment>
             <Panel header="Max class size">
               <RangeInput attribute="sections.maxClassSize" />
@@ -272,7 +297,7 @@ const App = ({ location, history }) => {
               />
             </Panel>
           </React.Fragment>
-        }
+        )}
 
         <Panel header="Sort By">
           <SortBy
@@ -290,7 +315,10 @@ const App = ({ location, history }) => {
 
   const PageRightPanel = (
     <SidebarContainer className="search-panel__right">
-      <RightPanel history={history} getClassesForTerm={store.getClassesForTerm} />
+      <RightPanel
+        history={history}
+        getClassesForTerm={store.getClassesForTerm}
+      />
     </SidebarContainer>
   );
 
@@ -376,12 +404,27 @@ const App = ({ location, history }) => {
   let body;
 
   if (isMobile) {
-    const sidebarStyles = {sidebar: {zIndex: 999}, overlay: {zIndex: 998}};
+    const sidebarStyles = {
+      sidebar: { zIndex: 999 },
+      overlay: { zIndex: 998 },
+    };
     body = (
-      <ReactSidebar open={leftOpen} onSetOpen={setLeftOpen} sidebar={PageLeftPanel} styles={sidebarStyles}>
-      <ReactSidebar open={rightOpen} onSetOpen={setRightOpen} pullRight sidebar={PageRightPanel} styles={sidebarStyles} contentId="appContent">
-        {PageContent}
-      </ReactSidebar>
+      <ReactSidebar
+        open={leftOpen}
+        onSetOpen={setLeftOpen}
+        sidebar={PageLeftPanel}
+        styles={sidebarStyles}
+      >
+        <ReactSidebar
+          open={rightOpen}
+          onSetOpen={setRightOpen}
+          pullRight
+          sidebar={PageRightPanel}
+          styles={sidebarStyles}
+          contentId="appContent"
+        >
+          {PageContent}
+        </ReactSidebar>
       </ReactSidebar>
     );
   } else {
@@ -396,10 +439,18 @@ const App = ({ location, history }) => {
       onSearchStateChange={onSearchStateChange}
       createURL={createURL}
     >
-      <Route path={`/planner`} render={props => <Planner {...props} store={store} />} />
-      <Route path={`/courses/:slug/:courseId?`} render={props => <HitOverlay {...props} showExtended={true} store={store} />} />
-      <Route path={`/terms`} render={props => <Terms {...props} />} />
-      <Route path={`/privacy`} render={props => <Privacy {...props} />} />
+      <Route
+        path={`/planner`}
+        render={(props) => <Planner {...props} store={store} />}
+      />
+      <Route
+        path={`/courses/:slug/:courseId?`}
+        render={(props) => (
+          <HitOverlay {...props} showExtended={true} store={store} />
+        )}
+      />
+      <Route path={`/terms`} render={(props) => <Terms {...props} />} />
+      <Route path={`/privacy`} render={(props) => <Privacy {...props} />} />
       {body}
     </InstantSearch>
   );

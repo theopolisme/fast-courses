@@ -11,4 +11,4 @@ requests = "*"
 algoliasearch = ">=2.0,<3.0"
 
 [requires]
-python_version = "3.7"
+python_version = "3.9"
